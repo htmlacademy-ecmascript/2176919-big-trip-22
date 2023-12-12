@@ -1,5 +1,5 @@
-import { PLACES, VEHICLES, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE } from '../data/data.js';
-import { getRandomInteger, getRandomArrayElement } from '../utils/utils.js';
+import { PLACES, VEHICLES, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE } from './data.js';
+import { getRandomInteger, getRandomArrayElement } from './utils.js';
 
 const mockOptions = [
   {
@@ -165,8 +165,33 @@ const mockDestination = [
   }
 ];
 
+const mockData = [
+  {
+    'date-from': new Date(),
+    'date-to': new Date(),
+    'is-favorite': false,
+  },
+  {
+    'date-from': new Date(),
+    'date-to': new Date(),
+    'is-favorite': true,
+  }
+];
+
 function getRandomWaypoint() {
-  return [getRandomArrayElement(mockOptions), getRandomArrayElement(mockDestination)];
+  const options = getRandomArrayElement(mockOptions);
+  const data = getRandomArrayElement(mockData);
+  const { type, offers } = options;
+
+  return [{
+    totalAmount: offers.map((item) => item.price).reduce((a, b) => a + b, 0),
+    dateFrom: data['date-from'],
+    dateTo: data['date-to'],
+    destination: getRandomArrayElement(mockDestination),
+    favorite: data['is-favorite'],
+    offers,
+    type,
+  }];
 }
 
 export { getRandomWaypoint };
