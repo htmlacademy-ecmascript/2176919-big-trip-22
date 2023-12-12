@@ -7,20 +7,20 @@ import Waypoint from '../view/waypoint.js';
 
 const WAYPOINTS_COUNT = 3;
 export default class TripPresenter {
-  constructor(headerContainer, mainContainer) {
+  constructor({ headerContainer, mainContainer }) {
     this.headerContainer = headerContainer;
     this.mainContainer = mainContainer;
   }
 
   init() {
-    const formEdit = new FormEdit();
-    render(formEdit, this.mainContainer);
-
     const filters = new Filters();
     render(filters, this.headerContainer);
 
     const sorting = new Sorting();
     render(sorting, this.mainContainer);
+
+    const formEdit = new FormEdit();
+    render(formEdit, this.mainContainer);
 
     const formCreation = new FormCreation();
     render(formCreation, this.mainContainer);
