@@ -4,15 +4,16 @@ import Filters from '../view/filters.js';
 import Sorting from '../view/sorting.js';
 import FormCreation from '../view/form-creation.js';
 import Waypoint from '../view/waypoint.js';
-
-const WAYPOINTS_COUNT = 3;
 export default class TripPresenter {
-  constructor({ headerContainer, mainContainer }) {
+  constructor({ headerContainer, mainContainer, waypointModel }) {
     this.headerContainer = headerContainer;
     this.mainContainer = mainContainer;
+    this.waypointModel = waypointModel;
   }
 
   init() {
+    this.waypoints = [...this.waypointModel.getWaypoints()];
+
     const filters = new Filters();
     render(filters, this.headerContainer);
 
@@ -25,8 +26,8 @@ export default class TripPresenter {
     const formCreation = new FormCreation();
     render(formCreation, this.mainContainer);
 
-    for (let i = 0; i < WAYPOINTS_COUNT; i++) {
-      const waypoint = new Waypoint();
+    for (let i = 0; i < this.waypoints.length; i++) {
+      const waypoint = new Waypoint({ waypoint: this.waypoints[i] });
       render(waypoint, this.mainContainer);
     }
   }
