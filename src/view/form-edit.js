@@ -1,7 +1,6 @@
 import { createElement } from '../render.js';
 
 function createFormEditTemplate(waypoint) {
-  console.log(waypoint);
   const { offers, type, dateFrom, dateTo, destination, totalAmount } = waypoint;
   return (`<form class="event event--edit" action="#" method="post">
     <header class="event__header">
