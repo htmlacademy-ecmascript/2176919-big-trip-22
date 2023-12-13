@@ -7,6 +7,7 @@ const mockOptions = [
     'offers': [{
       'title': OFFER_TITLE[2],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     }]
   },
   {
@@ -14,10 +15,12 @@ const mockOptions = [
     'offers': [{
       'title': OFFER_TITLE[4],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     },
     {
       'title': OFFER_TITLE[5],
       'price': getRandomInteger(50, 200),
+      'checked': false,
     }]
   },
   {
@@ -25,6 +28,7 @@ const mockOptions = [
     'offers': [{
       'title': OFFER_TITLE[3],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     }]
   },
   {
@@ -32,14 +36,17 @@ const mockOptions = [
     'offers': [{
       'title': OFFER_TITLE[0],
       'price': getRandomInteger(50, 200),
+      'checked': false,
     },
     {
       'title': OFFER_TITLE[1],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     },
     {
       'title': OFFER_TITLE[5],
       'price': getRandomInteger(50, 200),
+      'checked': false,
     }]
   },
   {
@@ -47,10 +54,12 @@ const mockOptions = [
     'offers': [{
       'title': OFFER_TITLE[0],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     },
     {
       'title': OFFER_TITLE[3],
       'price': getRandomInteger(50, 200),
+      'checked': false,
     }]
   },
   {
@@ -58,14 +67,17 @@ const mockOptions = [
     'offers': [{
       'title': OFFER_TITLE[0],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     },
     {
       'title': OFFER_TITLE[2],
       'price': getRandomInteger(50, 200),
+      'checked': false,
     },
     {
       'title': OFFER_TITLE[3],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     }]
   },
   {
@@ -73,14 +85,17 @@ const mockOptions = [
     'offers': [{
       'title': OFFER_TITLE[0],
       'price': getRandomInteger(50, 200),
+      'checked': false,
     },
     {
       'title': OFFER_TITLE[2],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     },
     {
       'title': OFFER_TITLE[3],
       'price': getRandomInteger(50, 200),
+      'checked': false,
     }]
   },
   {
@@ -88,6 +103,7 @@ const mockOptions = [
     'offers': [{
       'title': OFFER_TITLE[1],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     }]
   },
   {
@@ -95,18 +111,22 @@ const mockOptions = [
     'offers': [{
       'title': OFFER_TITLE[0],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     },
     {
       'title': OFFER_TITLE[1],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     },
     {
       'title': OFFER_TITLE[2],
       'price': getRandomInteger(50, 200),
+      'checked': 'checked',
     },
     {
       'title': OFFER_TITLE[3],
       'price': getRandomInteger(50, 200),
+      'checked': false,
     }]
   }
 ];

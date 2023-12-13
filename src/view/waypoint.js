@@ -1,8 +1,8 @@
 import { createElement } from '../render.js';
-//.toLocaleString('default', { month: 'short' })
-function createWaypointTemplate(waypoints) {
+
+function createWaypointTemplate(waypoint) {
   const { totalAmount, dateFrom, dateTo, destination, offers, type
-  } = waypoints[0];
+  } = waypoint;
   return (`<div class="event">
   <time class="event__date" datetime="2019-03-18">${dateFrom.toString().split(' ')[1]} ${dateFrom.getDate()}</time>
   <div class="event__type">
@@ -22,11 +22,12 @@ function createWaypointTemplate(waypoints) {
   </p>
   <h4 class="visually-hidden">Offers:</h4>
   <ul class="event__selected-offers">
-    <li class="event__offer">
-      <span class="event__offer-title">${offers[0].title}</span>
+  ${offers.map(({ title, price }) => `
+      <li class="event__offer">
+      <span class="event__offer-title">${title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offers[0].price}</span>
-    </li>
+      <span class="event__offer-price">${price}</span>
+    </li>`).join('')}
   </ul>
   <button class="event__favorite-btn event__favorite-btn--active" type="button">
     <span class="visually-hidden">Add to favorite</span>

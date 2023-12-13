@@ -20,14 +20,14 @@ export default class TripPresenter {
     const sorting = new Sorting();
     render(sorting, this.mainContainer);
 
-    const formEdit = new FormEdit();
+    const formEdit = new FormEdit({ waypoint: this.waypoints[0][0] });
     render(formEdit, this.mainContainer);
 
     const formCreation = new FormCreation();
     render(formCreation, this.mainContainer);
 
     for (let i = 0; i < this.waypoints.length; i++) {
-      const waypoint = new Waypoint({ waypoint: this.waypoints[i] });
+      const waypoint = new Waypoint({ waypoint: this.waypoints[i][0] });
       render(waypoint, this.mainContainer);
     }
   }
