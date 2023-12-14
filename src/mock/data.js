@@ -1,5 +1,5 @@
 const PLACES = ['Check-in', 'Sightseeing', 'Restaurant'];
-const VEHICLES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight'];
+const VEHICLES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight'];
 const CITIES = ['Amsterdam', 'Chamonix', 'Geneva'];
 const DESCRIPTION = [
   'Located on the ocean with white sandy beaches and crystal clear water',
