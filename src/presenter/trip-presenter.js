@@ -2,7 +2,6 @@ import { render } from '../render.js';
 import FormEdit from '../view/form-edit.js';
 import Filters from '../view/filters.js';
 import Sorting from '../view/sorting.js';
-import FormCreation from '../view/form-creation.js';
 import Waypoint from '../view/waypoint.js';
 export default class TripPresenter {
   constructor({ headerContainer, mainContainer, waypointModel }) {
@@ -20,14 +19,21 @@ export default class TripPresenter {
     const sorting = new Sorting();
     render(sorting, this.mainContainer);
 
-    const formEdit = new FormEdit({ waypoint: this.waypoints[0][0] });
+    const formEdit = new FormEdit({
+      waypoint: this.waypoints[0][0],
+      offersType: this.waypointModel.getOffersByType(this.waypoints[0][0].type),
+      offers: [...this.waypointModel.getOffersById(this.waypoints[0][0].type, this.waypoints[0][0].offersId)],
+      destination: this.waypointModel.getDestinationsById(this.waypoints[0][0].destination),
+      destinationAll: this.waypointModel.getDestinations(),
+    });
     render(formEdit, this.mainContainer);
 
-    const formCreation = new FormCreation();
-    render(formCreation, this.mainContainer);
-
     for (let i = 0; i < this.waypoints.length; i++) {
-      const waypoint = new Waypoint({ waypoint: this.waypoints[i][0] });
+      const waypoint = new Waypoint({
+        waypoint: this.waypoints[i][0],
+        offers: [...this.waypointModel.getOffersById(this.waypoints[i][0].type, this.waypoints[i][0].offersId)],
+        destination: this.waypointModel.getDestinationsById(this.waypoints[i][0].destination),
+      });
       render(waypoint, this.mainContainer);
     }
   }
