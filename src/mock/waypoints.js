@@ -210,7 +210,7 @@ const getRandomWaypoint = () => {
   const offersIdType = offers.map((item) => item.id);
   const offersId = offersIdType.slice(0, getRandomInteger(0, offers.length));
 
-  return [{
+  return {
     id: uuidv4(),
     basePrice: getRandomInteger(100, 2000),
     dateFrom: date['date-from'],
@@ -219,7 +219,7 @@ const getRandomWaypoint = () => {
     favorite: date['is-favorite'],
     offersId,
     type,
-  }];
+  };
 };
 
 export { getRandomWaypoint, mockDestination, mockOptions };

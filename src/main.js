@@ -6,4 +6,3 @@ const siteMainElement = document.querySelector('.trip-events');
 const waypointModel = new WaypointModel();
 const presenter = new TripPresenter({ headerContainer: siteFiltersElement, mainContainer: siteMainElement, waypointModel });
 presenter.init();
-

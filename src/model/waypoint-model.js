@@ -8,11 +8,11 @@ export default class WaypointModel {
   destination = mockDestination;
 
   getWaypoints() {
-    return this.waypoints;
+    return structuredClone(this.waypoints);
   }
 
   getOffers() {
-    return this.offers;
+    return structuredClone(this.offers);
   }
 
   getOffersByType(type) {
@@ -26,7 +26,7 @@ export default class WaypointModel {
   }
 
   getDestinations() {
-    return this.destination;
+    return structuredClone(this.destination);
   }
 
   getDestinationsById(id) {
