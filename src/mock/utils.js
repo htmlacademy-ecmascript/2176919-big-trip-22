@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-dayjs.extend(duration);
+import durationPlugin from 'dayjs/plugin/duration';
+dayjs.extend(durationPlugin);
 
 const getRandomInteger = (a = 0, b = 50) => {
   const lower = Math.ceil(Math.min(a, b));
