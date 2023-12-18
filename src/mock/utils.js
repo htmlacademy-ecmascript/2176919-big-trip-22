@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-const duration = require('dayjs/plugin/duration');
+import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
 const getRandomInteger = (a = 0, b = 50) => {
@@ -13,6 +13,16 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 
 const humanizeDueDate = (dueDate, format) => dueDate ? dayjs(dueDate).format(format) : '';
 
-const getDuration = (start, end) => dayjs.duration(dayjs(end).diff(dayjs(start))).format('DD[D] HH[H] mm[M]');
+const getDuration = (start, end) => {
+  const duration = dayjs.duration(dayjs(end).diff(dayjs(start)));
+  if (duration.days()) {
+    return duration.format('DD[d] HH[h] mm[m]');
+  }
+  if (duration.hours()) {
+    return duration.format('HH[h] mm[m]');
+  }
+
+  return duration.format('mm[m]');
+};
 
 export { getRandomInteger, getRandomArrayElement, humanizeDueDate, getDuration };
