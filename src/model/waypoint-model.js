@@ -3,20 +3,20 @@ import { getRandomWaypoint, mockDestination, mockOptions } from '../mock/waypoin
 const WAYPOINT_COUNT = 3;
 
 export default class WaypointModel {
-  waypoints = Array.from({ length: WAYPOINT_COUNT }, getRandomWaypoint);
-  offers = mockOptions;
-  destination = mockDestination;
+  #waypoints = Array.from({ length: WAYPOINT_COUNT }, getRandomWaypoint);
+  #offers = mockOptions;
+  #destination = mockDestination;
 
-  getWaypoints() {
-    return structuredClone(this.waypoints);
+  get waypoints() {
+    return structuredClone(this.#waypoints);
   }
 
-  getOffers() {
-    return structuredClone(this.offers);
+  get offers() {
+    return structuredClone(this.#offers);
   }
 
   getOffersByType(type) {
-    const allOffers = this.getOffers();
+    const allOffers = this.offers;
     return allOffers.find((offer) => offer.type === type);
   }
 
@@ -25,12 +25,12 @@ export default class WaypointModel {
     return offersType.offers.filter((item) => itemsId.find((id) => item.id === id));
   }
 
-  getDestinations() {
-    return structuredClone(this.destination);
+  get destinations() {
+    return structuredClone(this.#destination);
   }
 
   getDestinationsById(id) {
-    const allDestination = this.getDestinations();
+    const allDestination = this.destinations;
     return allDestination.find((item) => item.id === id);
   }
 }

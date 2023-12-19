@@ -134,13 +134,13 @@ const mockOptions = [
 
 const mockDestination = [
   {
-    'id': uuidv4(),
+    'id': '1ce4e34c-1574-4d6c-8586-e47ffaa6bfd6',
     'description': `${DESCRIPTION[0]}. ${DESCRIPTION[2]}`,
     'name': CITIES[0],
     'photos': [],
   },
   {
-    'id': uuidv4(),
+    'id': '1ce4e35c-1574-4d6c-8586-e45ffaa6bfd6',
     'description': `${DESCRIPTION[1]}. ${DESCRIPTION[3]}. ${DESCRIPTION[2]}`,
     'name': CITIES[1],
     'photos': [
@@ -160,7 +160,7 @@ const mockDestination = [
     ],
   },
   {
-    'id': uuidv4(),
+    'id': '1ce4e34c-1544-4d6c-8586-e45ffaa6bfd6',
     'description': `${DESCRIPTION[4]}. ${DESCRIPTION[2]}. ${DESCRIPTION[3]}. ${DESCRIPTION[1]}`,
     'name': CITIES[2],
     'photos': [
