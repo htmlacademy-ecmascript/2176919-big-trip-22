@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 import FormEdit from '../view/form-edit.js';
 import Filters from '../view/filters.js';
 import Sorting from '../view/sorting.js';

@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDueDate } from '../mock/utils.js';
 import { DATE_FORMAT, TYPE, CLASS_NAME } from '../mock/data.js';
 
@@ -88,28 +88,23 @@ function createFormEditTemplate(waypoint, offers, destination, offersType, desti
   </form>`);
 }
 
-export default class FormEdit {
+export default class FormEdit extends AbstractView {
+  #waypoint = null;
+  #offers = null;
+  #description = null;
+  #offersType = null;
+  #destinationAll = null;
+
   constructor({ waypoint, offers, destination, offersType, destinationAll }) {
-    this.waypoint = waypoint;
-    this.offers = offers;
-    this.description = destination;
-    this.offersType = offersType;
-    this.destinationAll = destinationAll;
+    super();
+    this.#waypoint = waypoint;
+    this.#offers = offers;
+    this.#description = destination;
+    this.#offersType = offersType;
+    this.#destinationAll = destinationAll;
   }
 
-  getTemplate() {
-    return createFormEditTemplate(this.waypoint, this.offers, this.description, this.offersType, this.destinationAll);
-  }
-
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
+  get template() {
+    return createFormEditTemplate(this.#waypoint, this.#offers, this.#description, this.#offersType, this.#destinationAll);
   }
 }
