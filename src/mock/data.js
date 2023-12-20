@@ -23,5 +23,11 @@ const CLASS_NAME = {
   'Travel by train': 'train',
   'Order Uber': 'uber',
 };
+const TEXT_NO_EVENT = {
+  everything: 'Click New Event to create your first point',
+  past: 'There are no past events now',
+  present: 'There are no present events now',
+  future: 'There are no future events now',
+};
 
-export { TYPE, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE, DATE_FORMAT, CLASS_NAME };
+export { TYPE, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE, DATE_FORMAT, CLASS_NAME, TEXT_NO_EVENT };

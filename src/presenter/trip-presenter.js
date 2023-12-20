@@ -4,6 +4,7 @@ import Filters from '../view/filters.js';
 import Sorting from '../view/sorting.js';
 import Waypoint from '../view/waypoint.js';
 import ButtonNewEvent from '../view/button-new-event.js';
+import NoEvent from '../view/no-event.js';
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
@@ -67,8 +68,14 @@ export default class TripPresenter {
 
   #renderApp() {
     render(this.#filters, this.#headerContainer);
-    render(this.#sorting, this.#mainContainer);
     render(this.#buttonNewEvent, this.#headerContainer, RenderPosition.AFTEREND);
+
+    if (this.#waypoints.length === 0) {
+      render(new NoEvent(), this.#mainContainer);
+      return;
+    }
+
+    render(this.#sorting, this.#mainContainer);
     for (let i = 0; i < this.#waypoints.length; i++) {
       this.#renderWaypoint(this.#waypoints[i]);
     }
