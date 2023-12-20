@@ -145,6 +145,7 @@ export default class FormEdit extends AbstractView {
     };
     this.#handleFormSubmit = onFormSubmit;
     this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
   }
 
   get template() {
