@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDueDate, getDuration } from '../mock/utils.js';
 import { DATE_FORMAT } from '../mock/data.js';
 
-function createWaypointTemplate(waypoint, offers, destination) {
+function createWaypointTemplate({ waypoint, offers, destination }) {
   const { basePrice, type, dateFrom, dateTo, favorite
   } = waypoint;
   const { name } = destination;
@@ -44,23 +44,23 @@ function createWaypointTemplate(waypoint, offers, destination) {
 }
 
 export default class Waypoint extends AbstractView {
-  #waypoint = null;
-  #offers = null;
-  #destination = null;
-  #handleEditClick = null;
+  #stat;
+  #handleEditClick;
 
   constructor({ waypoint, offers, destination, onEditClick }) {
     super();
-    this.#waypoint = waypoint;
-    this.#offers = offers;
-    this.#destination = destination;
+    this.#stat = {
+      waypoint,
+      offers,
+      destination
+    };
     this.#handleEditClick = onEditClick;
 
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   }
 
   get template() {
-    return createWaypointTemplate(this.#waypoint, this.#offers, this.#destination);
+    return createWaypointTemplate(this.#stat);
   }
 
   #editClickHandler = (evt) => {

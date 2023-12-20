@@ -101,11 +101,7 @@ const mockOptions = [
   },
   {
     'type': TYPE[7],
-    'offers': [{
-      'title': OFFER_TITLE[1],
-      'price': getRandomInteger(50, 200),
-      'id': '4296ac31-d7bc-4b73-9ccf-21c24f2a6d01',
-    }]
+    'offers': []
   },
   {
     'type': TYPE[8],
