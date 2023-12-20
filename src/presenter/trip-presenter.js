@@ -1,4 +1,4 @@
-import { render, RenderPosition } from '../framework/render.js';
+import { render, replace, RenderPosition } from '../framework/render.js';
 import FormEdit from '../view/form-edit.js';
 import Filters from '../view/filters.js';
 import Sorting from '../view/sorting.js';
@@ -12,8 +12,6 @@ export default class TripPresenter {
   #sorting = new Sorting();
   #buttonNewEvent = new ButtonNewEvent();
   #waypoints = [];
-  #formEdit = {};
-  #waypoint = {};
 
   constructor({ headerContainer, mainContainer, waypointModel }) {
     this.#headerContainer = headerContainer;
@@ -26,29 +24,49 @@ export default class TripPresenter {
     render(this.#filters, this.#headerContainer);
     render(this.#sorting, this.#mainContainer);
     render(this.#buttonNewEvent, this.#headerContainer, RenderPosition.AFTEREND);
-    this.#renderFormEdit(this.#waypoints[0]);
     for (let i = 0; i < this.#waypoints.length; i++) {
       this.#renderWaypoint(this.#waypoints[i]);
     }
   }
 
-  #renderWaypoint(waypoints) {
-    this.#waypoint = new Waypoint({
-      waypoint: waypoints,
-      offers: [...this.#waypointModel.getOffersById(waypoints.type, waypoints.offersId)],
-      destination: this.#waypointModel.getDestinationsById(waypoints.destination),
-    });
-    render(this.#waypoint, this.#mainContainer);
-  }
+  #renderWaypoint(point) {
+    const escKeyDownHandler = (evt) => {
+      if (evt.key === 'Escape') {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    };
 
-  #renderFormEdit(waypoints) {
-    this.#formEdit = new FormEdit({
-      waypoint: waypoints,
-      offersType: this.#waypointModel.getOffersByType(waypoints.type),
-      offers: [...this.#waypointModel.getOffersById(waypoints.type, waypoints.offersId)],
-      destination: this.#waypointModel.getDestinationsById(waypoints.destination),
-      destinationAll: this.#waypointModel.destinations,
+    const waypoint = new Waypoint({
+      waypoint: point,
+      offers: [...this.#waypointModel.getOffersById(point.type, point.offersId)],
+      destination: this.#waypointModel.getDestinationsById(point.destination),
+      onEditClick: () => {
+        replacePointToForm();
+        document.addEventListener('keydown', escKeyDownHandler);
+      }
     });
-    render(this.#formEdit, this.#mainContainer);
+
+    const formEdit = new FormEdit({
+      waypoint: point,
+      offersType: this.#waypointModel.getOffersByType(point.type),
+      offers: [...this.#waypointModel.getOffersById(point.type, point.offersId)],
+      destination: this.#waypointModel.getDestinationsById(point.destination),
+      destinationAll: this.#waypointModel.destinations,
+      onFormSubmit: () => {
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeyDownHandler);
+      }
+    });
+
+    function replacePointToForm() {
+      replace(formEdit, waypoint);
+    }
+
+    function replaceFormToPoint() {
+      replace(waypoint, formEdit);
+    }
+    render(waypoint, this.#mainContainer);
   }
 }

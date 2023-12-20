@@ -94,17 +94,25 @@ export default class FormEdit extends AbstractView {
   #description = null;
   #offersType = null;
   #destinationAll = null;
+  #handleFormSubmit = null;
 
-  constructor({ waypoint, offers, destination, offersType, destinationAll }) {
+  constructor({ waypoint, offers, destination, offersType, destinationAll, onFormSubmit }) {
     super();
     this.#waypoint = waypoint;
     this.#offers = offers;
     this.#description = destination;
     this.#offersType = offersType;
     this.#destinationAll = destinationAll;
+    this.#handleFormSubmit = onFormSubmit;
+    this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
   }
 
   get template() {
     return createFormEditTemplate(this.#waypoint, this.#offers, this.#description, this.#offersType, this.#destinationAll);
   }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }
