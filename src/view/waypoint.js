@@ -73,7 +73,6 @@ function createWaypointTemplate({ waypoint, offers, destination }) {
 </div>`);
 }
 
-
 export default class Waypoint extends AbstractView {
   #stat;
   #handleEditClick;

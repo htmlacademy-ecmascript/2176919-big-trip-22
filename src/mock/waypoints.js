@@ -131,14 +131,8 @@ const mockOptions = [
 const mockDestination = [
   {
     'id': '1ce4e34c-1574-4d6c-8586-e47ffaa6bfd6',
-    'description': `${DESCRIPTION[0]}. ${DESCRIPTION[2]}`,
+    'description': '',
     'name': CITIES[0],
-    'photos': [],
-  },
-  {
-    'id': '1ce4e35c-1574-4d6c-8586-e45ffaa6bfd6',
-    'description': `${DESCRIPTION[1]}. ${DESCRIPTION[3]}. ${DESCRIPTION[2]}`,
-    'name': CITIES[1],
     'photos': [
       {
         'src': `${PHOTO}${getRandomInteger(1, 20)}`,
@@ -154,6 +148,12 @@ const mockDestination = [
         'description': `${DESCRIPTION[2]}`
       }
     ],
+  },
+  {
+    'id': '1ce4e35c-1574-4d6c-8586-e45ffaa6bfd6',
+    'description': `${DESCRIPTION[1]}. ${DESCRIPTION[3]}. ${DESCRIPTION[2]}`,
+    'name': CITIES[1],
+    'photos': [],
   },
   {
     'id': '1ce4e34c-1544-4d6c-8586-e45ffaa6bfd6',
@@ -198,6 +198,19 @@ const mockDate = [
   }
 ];
 
+/**
+ * RandomWaypoint
+ * @typedef {Object} RandomWaypoint
+ * @property {string} RandomWaypoint.id
+ * @property {number} RandomWaypoint.basePrice
+ * @property {string} RandomWaypoint.dateFrom
+ * @property {string} RandomWaypoint.dateTo
+ * @property {string} RandomWaypoint.destination
+ * @property {boolean} RandomWaypoint.favorite
+ * @property {string[]} RandomWaypoint.offersId
+ * @property {string} RandomWaypoint.type
+ * @returns {RandomWaypoint}
+ */
 const getRandomWaypoint = () => {
   const options = getRandomArrayElement(mockOptions);
   const date = getRandomArrayElement(mockDate);

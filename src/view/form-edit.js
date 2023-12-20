@@ -98,7 +98,7 @@ function createOffersTemplate(offers, offersType) {
 
 function createDestinationTemplate(destination) {
   const { description, photos } = destination;
-  if (destination.length === 0) {
+  if (description.length === 0 && photos.length === 0) {
     return '';
   }
   return (`<section class="event__section  event__section--destination">
