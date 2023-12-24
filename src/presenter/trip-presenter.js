@@ -10,7 +10,6 @@ export default class TripPresenter {
   #headerContainer;
   #mainContainer;
   #waypointModel;
-  #filters = new Filters();
   #sorting = new Sorting();
   #buttonNewEvent = new ButtonNewEvent();
   #tripInfo = new TripInfo();
@@ -69,7 +68,8 @@ export default class TripPresenter {
   }
 
   #renderApp() {
-    render(this.#filters, this.#headerContainer);
+    const filters = new Filters(this.#waypoints);
+    render(filters, this.#headerContainer);
     render(this.#buttonNewEvent, this.#headerContainer, RenderPosition.AFTEREND);
     render(this.#tripInfo, this.#headerContainer, RenderPosition.BEFOREBEGIN);
 

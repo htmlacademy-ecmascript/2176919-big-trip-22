@@ -1,5 +1,4 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { FilterType } from '../mock/constants.js';
 
 function createFiltersTemplate() {
   return (`<div class="trip-main__trip-controls  trip-controls">
@@ -33,7 +32,13 @@ function createFiltersTemplate() {
 }
 
 export default class Filters extends AbstractView {
+  #waypoints;
+  constructor({ waypoints }) {
+    super();
+    this.#waypoints = waypoints;
+  }
+
   get template() {
-    return createFiltersTemplate();
+    return createFiltersTemplate(this.#waypoints);
   }
 }
