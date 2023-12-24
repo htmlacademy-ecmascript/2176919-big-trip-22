@@ -1,6 +1,6 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDueDate, getDuration } from '../mock/utils.js';
-import { DATE_FORMAT } from '../mock/data.js';
+import { DATE_FORMAT } from '../mock/constants.js';
 
 function createStartDateTemplate(start) {
   return (`<time class="event__date" datetime="${humanizeDueDate(start, DATE_FORMAT.fullDate)}">${humanizeDueDate(start, DATE_FORMAT.day)}</time>`);

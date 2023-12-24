@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { TEXT_NO_EVENT } from '../mock/data.js';
+import { TEXT_NO_EVENT } from '../mock/constants.js';
 
 function createNoEventTemplate() {
   return (`<p class="trip-events__msg">${TEXT_NO_EVENT.everything}</p>`);
