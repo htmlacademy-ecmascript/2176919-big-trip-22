@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { TYPE, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE } from './data.js';
+import { TYPE, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE } from './constants.js';
 import { getRandomInteger, getRandomArrayElement } from './utils.js';
 
 const mockOptions = [
@@ -101,11 +101,7 @@ const mockOptions = [
   },
   {
     'type': TYPE[7],
-    'offers': [{
-      'title': OFFER_TITLE[1],
-      'price': getRandomInteger(50, 200),
-      'id': '4296ac31-d7bc-4b73-9ccf-21c24f2a6d01',
-    }]
+    'offers': []
   },
   {
     'type': TYPE[8],
@@ -134,15 +130,9 @@ const mockOptions = [
 
 const mockDestination = [
   {
-    'id': uuidv4(),
-    'description': `${DESCRIPTION[0]}. ${DESCRIPTION[2]}`,
+    'id': '1ce4e34c-1574-4d6c-8586-e47ffaa6bfd6',
+    'description': '',
     'name': CITIES[0],
-    'photos': [],
-  },
-  {
-    'id': uuidv4(),
-    'description': `${DESCRIPTION[1]}. ${DESCRIPTION[3]}. ${DESCRIPTION[2]}`,
-    'name': CITIES[1],
     'photos': [
       {
         'src': `${PHOTO}${getRandomInteger(1, 20)}`,
@@ -160,7 +150,13 @@ const mockDestination = [
     ],
   },
   {
-    'id': uuidv4(),
+    'id': '1ce4e35c-1574-4d6c-8586-e45ffaa6bfd6',
+    'description': `${DESCRIPTION[1]}. ${DESCRIPTION[3]}. ${DESCRIPTION[2]}`,
+    'name': CITIES[1],
+    'photos': [],
+  },
+  {
+    'id': '1ce4e34c-1544-4d6c-8586-e45ffaa6bfd6',
     'description': `${DESCRIPTION[4]}. ${DESCRIPTION[2]}. ${DESCRIPTION[3]}. ${DESCRIPTION[1]}`,
     'name': CITIES[2],
     'photos': [
@@ -202,6 +198,19 @@ const mockDate = [
   }
 ];
 
+/**
+ * RandomWaypoint
+ * @typedef {Object} RandomWaypoint
+ * @property {string} RandomWaypoint.id
+ * @property {number} RandomWaypoint.basePrice
+ * @property {string} RandomWaypoint.dateFrom
+ * @property {string} RandomWaypoint.dateTo
+ * @property {string} RandomWaypoint.destination
+ * @property {boolean} RandomWaypoint.favorite
+ * @property {string[]} RandomWaypoint.offersId
+ * @property {string} RandomWaypoint.type
+ * @returns {RandomWaypoint}
+ */
 const getRandomWaypoint = () => {
   const options = getRandomArrayElement(mockOptions);
   const date = getRandomArrayElement(mockDate);

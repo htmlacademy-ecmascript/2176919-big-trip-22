@@ -1,14 +1,11 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDueDate } from '../mock/utils.js';
-import { DATE_FORMAT, TYPE, CLASS_NAME } from '../mock/data.js';
+import { DATE_FORMAT, TYPE, CLASS_NAME } from '../mock/constants.js';
 
-function createFormEditTemplate(waypoint, offers, destination, offersType, destinationAll) {
-  const idPoints = offers.map((item) => item.id);
-  const { type, dateFrom, dateTo, basePrice, id } = waypoint;
-  const { name: namePoint, description, photos } = destination;
-  return (`<form class="event event--edit" action="#" method="post">
-    <header class="event__header">
-      <div class="event__type-wrapper">
+function createTypeTemplate(waypoint, destination, destinationAll) {
+  const { type, id } = waypoint;
+  const { name: namePoint } = destination;
+  return (`<div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
           <span class="visually-hidden">Choose event type</span>
           <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event ${type} icon">
@@ -34,32 +31,52 @@ function createFormEditTemplate(waypoint, offers, destination, offersType, desti
         <datalist id="destination-list-${id}">
         ${destinationAll.map(({ name: nameDestination }) => `<option value="${nameDestination}"></option>`).join('')}
         </datalist>
-      </div>
+      </div>`);
+}
 
-      <div class="event__field-group  event__field-group--time">
+function createDateTemplate(waypoint) {
+  const { dateFrom, dateTo, id } = waypoint;
+  return (`      <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-${id}">From</label>
         <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, DATE_FORMAT.year)}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-${id}">To</label>
         <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, DATE_FORMAT.year)}">
-      </div>
+      </div>`);
+}
 
-      <div class="event__field-group  event__field-group--price">
+function createPriceTemplate(waypoint) {
+  const { basePrice, id } = waypoint;
+  return (`      <div class="event__field-group  event__field-group--price">
         <label class="event__label" for="event-price-${id}">
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
         <input class="event__input  event__input--price" id="event-price-${id}" type="text" name="event-price" value="${basePrice}">
-      </div>
+      </div>`);
+}
 
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Delete</button>
+function createSaveButton() {
+  return ('<button class="event__save-btn  btn  btn--blue" type="submit">Save</button>');
+}
+
+function createResetButton() {
+  return ('<button class="event__reset-btn" type="reset">Delete</button>');
+}
+
+function createRollupButton() {
+  return (`
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
-    </header>
-    <section class="event__details">
-      <section class="event__section  event__section--offers">
+    `);
+}
+
+function createOffersTemplate(offers, offersType) {
+  const idPoints = offers.map((item) => item.id);
+  if (offersType.offers.length !== 0) {
+    return (
+      `<section class="event__section  event__section--offers">
         <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
         <div class="event__available-offers">
@@ -73,9 +90,18 @@ function createFormEditTemplate(waypoint, offers, destination, offersType, desti
           </div>`).join('')}
 
         </div>
-      </section>
+      </section>`
+    );
+  }
+  return '';
+}
 
-      <section class="event__section  event__section--destination">
+function createDestinationTemplate(destination) {
+  const { description, photos } = destination;
+  if (description.length === 0 && photos.length === 0) {
+    return '';
+  }
+  return (`<section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         <p class="event__destination-description">${description}</p>
         <div class="event__photos-container">
@@ -83,33 +109,51 @@ function createFormEditTemplate(waypoint, offers, destination, offersType, desti
           ${photos.map(({ description: descriptionPhoto, src }) => `<img class="event__photo" src="${src}" alt="${descriptionPhoto}">`).join('')}
           </div>
         </div>
-      </section>
+      </section>`);
+}
+
+function createFormEditTemplate({ waypoint, offers, destination, offersType, destinationAll }) {
+
+  return (`<form class="event event--edit" action="#" method="post">
+    <header class="event__header">
+      ${createTypeTemplate(waypoint, destination, destinationAll)}
+      ${createDateTemplate(waypoint)}
+      ${createPriceTemplate(waypoint)}
+      ${createSaveButton()}
+      ${createResetButton()}
+      ${createRollupButton()}
+    </header>
+    <section class="event__details">
+      ${createOffersTemplate(offers, offersType)}
+      ${createDestinationTemplate(destination)}
     </section>
   </form>`);
 }
 
-export default class FormEdit {
-  constructor({ waypoint, offers, destination, offersType, destinationAll }) {
-    this.waypoint = waypoint;
-    this.offers = offers;
-    this.description = destination;
-    this.offersType = offersType;
-    this.destinationAll = destinationAll;
+export default class FormEdit extends AbstractView {
+  #stat;
+  #handleFormSubmit;
+
+  constructor({ waypoint, offers, destination, offersType, destinationAll, onFormSubmit }) {
+    super();
+    this.#stat = {
+      waypoint,
+      offers,
+      destination,
+      offersType,
+      destinationAll
+    };
+    this.#handleFormSubmit = onFormSubmit;
+    this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
   }
 
-  getTemplate() {
-    return createFormEditTemplate(this.waypoint, this.offers, this.description, this.offersType, this.destinationAll);
+  get template() {
+    return createFormEditTemplate(this.#stat);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
-    }
-
-    return this.element;
-  }
-
-  removeElement() {
-    this.element = null;
-  }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 }
