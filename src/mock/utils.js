@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import durationPlugin from 'dayjs/plugin/duration';
+import durationPlugin from 'dayjs/plugin/duration.js';
 dayjs.extend(durationPlugin);
+import { FilterType } from './constants.js';
 
 const getRandomInteger = (a = 0, b = 50) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -25,4 +26,15 @@ const getDuration = (start, end) => {
   return duration.format('mm[m]');
 };
 
-export { getRandomInteger, getRandomArrayElement, humanizeDueDate, getDuration };
+function checksTravelDates(dueDate) {
+  return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
+}
+
+const filter = {
+  [FilterType.EVERYTHING]: (points) => points,
+  [FilterType.PAST]: (points) => points.filter((point) => checksTravelDates(point.dateFrom)),
+  [FilterType.PRESENT]: (points) => points.filter((point) => checksTravelDates(point.dateFrom)),
+  [FilterType.FUTURE]: (points) => points.filter((point) => checksTravelDates(point.dateFrom)),
+};
+
+export { getRandomInteger, getRandomArrayElement, humanizeDueDate, getDuration, filter };

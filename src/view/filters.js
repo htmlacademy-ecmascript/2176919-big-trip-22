@@ -1,4 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
+import { FilterType } from '../mock/constants.js';
 
 function createFiltersTemplate() {
   return (`<div class="trip-main__trip-controls  trip-controls">
