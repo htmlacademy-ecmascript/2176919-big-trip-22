@@ -26,15 +26,23 @@ const getDuration = (start, end) => {
   return duration.format('mm[m]');
 };
 
-function checksTravelDates(dueDate) {
+function checksTravelIsSame(dueDate) {
   return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
+}
+
+function checksTravelIsBefore(dueDate) {
+  return dueDate && dayjs(dueDate).isBefore(dayjs(), 'D');
+}
+
+function checksTravelIsAfter(dueDate) {
+  return dueDate && dayjs(dueDate).isAfter(dayjs(), 'D');
 }
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points,
-  [FilterType.PAST]: (points) => points.filter((point) => checksTravelDates(point.dateFrom)),
-  [FilterType.PRESENT]: (points) => points.filter((point) => checksTravelDates(point.dateFrom)),
-  [FilterType.FUTURE]: (points) => points.filter((point) => checksTravelDates(point.dateFrom)),
+  [FilterType.PAST]: (points) => points.filter((point) => checksTravelIsBefore(point.dateFrom)),
+  [FilterType.PRESENT]: (points) => points.filter((point) => checksTravelIsSame(point.dateFrom)),
+  [FilterType.FUTURE]: (points) => points.filter((point) => checksTravelIsAfter(point.dateFrom)),
 };
 
 export { getRandomInteger, getRandomArrayElement, humanizeDueDate, getDuration, filter };

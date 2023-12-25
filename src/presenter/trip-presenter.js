@@ -6,6 +6,7 @@ import Waypoint from '../view/waypoint.js';
 import ButtonNewEvent from '../view/button-new-event.js';
 import NoEvent from '../view/no-event.js';
 import TripInfo from '../view/trip-info.js';
+import { generateFilter } from '../mock/filter.js';
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
@@ -68,8 +69,8 @@ export default class TripPresenter {
   }
 
   #renderApp() {
-    const filters = new Filters(this.#waypoints);
-    render(filters, this.#headerContainer);
+    const filters = generateFilter(this.#waypoints);
+    render(new Filters({ filters }), this.#headerContainer);
     render(this.#buttonNewEvent, this.#headerContainer, RenderPosition.AFTEREND);
     render(this.#tripInfo, this.#headerContainer, RenderPosition.BEFOREBEGIN);
 
