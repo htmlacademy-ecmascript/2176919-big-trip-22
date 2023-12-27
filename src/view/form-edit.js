@@ -16,7 +16,7 @@ function createTypeTemplate(waypoint, destination, destinationAll) {
           <fieldset class="event__type-group">
             <legend class="visually-hidden">Event type</legend>
             ${TYPE.map((item) => `<div class="event__type-item">
-              <input id="event-type-${item}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}">
+              <input id="event-type-${item}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}" ${item === type ? 'checked' : ''}>
               <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-${id}">${item}</label>
             </div>`).join('')}
           </fieldset>
@@ -125,20 +125,23 @@ function createDestinationTemplate(destination) {
 
 function createFormEditTemplate({ waypoint, offers, destination, offersType, destinationAll }) {
 
-  return (`<form class="event event--edit" action="#" method="post">
-    <header class="event__header">
-      ${createTypeTemplate(waypoint, destination, destinationAll)}
-      ${createDateTemplate(waypoint)}
-      ${createPriceTemplate(waypoint)}
-      ${createSaveButton()}
-      ${createResetButton()}
-      ${createRollupButton()}
-    </header>
-    <section class="event__details">
-      ${createOffersTemplate(offers, offersType)}
-      ${createDestinationTemplate(destination)}
-    </section>
-  </form>`);
+  return (`
+  <li class="trip-events__item">
+    <form class="event event--edit" action="#" method="post">
+      <header class="event__header">
+        ${createTypeTemplate(waypoint, destination, destinationAll)}
+        ${createDateTemplate(waypoint)}
+        ${createPriceTemplate(waypoint)}
+        ${createSaveButton()}
+        ${createResetButton()}
+        ${createRollupButton()}
+      </header>
+      <section class="event__details">
+        ${createOffersTemplate(offers, offersType)}
+        ${createDestinationTemplate(destination)}
+      </section>
+    </form>
+  </li>`);
 }
 
 export default class FormEdit extends AbstractView {
@@ -158,6 +161,7 @@ export default class FormEdit extends AbstractView {
     this.#handleFormSubmit = onFormSubmit;
     this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
+    this.element.querySelector('.event__save-btn').addEventListener('click', (evt) => evt.preventDefault());
   }
 
   get template() {
