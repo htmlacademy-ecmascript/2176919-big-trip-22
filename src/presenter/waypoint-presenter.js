@@ -1,12 +1,13 @@
-import { render, replace } from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
 import Waypoint from '../view/waypoint.js';
 import FormEdit from '../view/form-edit.js';
 
 export default class WaypointPresenter {
   #mainContainer;
   #waypointModel;
-  #waypointComponent;
-  #waypointEditComponent;
+  #waypointComponent = null;
+  #waypointEditComponent = null;
+  #waypoint;
 
   constructor({ mainContainer, waypointModel }) {
     this.#mainContainer = mainContainer;
@@ -14,22 +15,45 @@ export default class WaypointPresenter {
   }
 
   init(point) {
+    this.#waypoint = point;
+
+    const prevWaypointComponent = this.#waypointComponent;
+    const prevWaypointEditComponent = this.#waypointEditComponent;
+
     this.#waypointComponent = new Waypoint({
-      waypoint: point,
+      waypoint: this.#waypoint,
       offers: [...this.#waypointModel.getOffersById(point.type, point.offersId)],
       destination: this.#waypointModel.getDestinationsById(point.destination),
       onEditClick: this.#handleEditClick,
     });
 
     this.#waypointEditComponent = new FormEdit({
-      waypoint: point,
+      waypoint: this.#waypoint,
       offersType: this.#waypointModel.getOffersByType(point.type),
       offers: [...this.#waypointModel.getOffersById(point.type, point.offersId)],
       destination: this.#waypointModel.getDestinationsById(point.destination),
       destinationAll: this.#waypointModel.destinations,
       onFormSubmit: this.#handleFormSubmit,
     });
-    render(this.#waypointComponent, this.#mainContainer);
+
+    if (prevWaypointComponent === null || prevWaypointEditComponent === null) {
+      render(this.#waypointComponent, this.#mainContainer);
+      return;
+    }
+    if (this.#mainContainer.contains(prevWaypointComponent.element)) {
+      replace(this.#waypointComponent, prevWaypointComponent);
+    }
+    if (this.#mainContainer.contains(prevWaypointEditComponent.element)) {
+      replace(this.#waypointEditComponent, prevWaypointEditComponent);
+    }
+
+    remove(prevWaypointComponent);
+    remove(prevWaypointEditComponent);
+  }
+
+  destroy() {
+    remove(this.#waypointComponent);
+    remove(this.#waypointEditComponent);
   }
 
   #escKeyDownHandler = (evt) => {
