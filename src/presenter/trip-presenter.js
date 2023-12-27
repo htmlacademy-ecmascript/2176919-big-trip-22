@@ -68,17 +68,31 @@ export default class TripPresenter {
     render(waypoint, this.#mainContainer);
   }
 
-  #renderApp() {
+  #renderFilters() {
     const filters = generateFilter(this.#waypoints);
     render(new Filters({ filters }), this.#headerContainer);
-    render(this.#buttonNewEvent, this.#headerContainer, RenderPosition.AFTEREND);
-    render(this.#tripInfo, this.#headerContainer, RenderPosition.BEFOREBEGIN);
+  }
 
+  #renderButtonNewEvent() {
+    render(this.#buttonNewEvent, this.#headerContainer, RenderPosition.AFTEREND);
+  }
+
+  #renderTripInfo() {
+    render(this.#tripInfo, this.#headerContainer, RenderPosition.BEFOREBEGIN);
+  }
+
+  #renderNoEvent() {
+    render(new NoEvent(), this.#mainContainer);
+  }
+
+  #renderApp() {
+    this.#renderFilters();
+    this.#renderButtonNewEvent();
+    this.#renderTripInfo();
     if (this.#waypoints.length === 0) {
-      render(new NoEvent(), this.#mainContainer);
+      this.#renderNoEvent();
       return;
     }
-
     render(this.#sorting, this.#mainContainer);
     for (let i = 0; i < this.#waypoints.length; i++) {
       this.#renderWaypoint(this.#waypoints[i]);
