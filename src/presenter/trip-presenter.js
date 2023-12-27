@@ -1,12 +1,11 @@
-import { render, replace, RenderPosition } from '../framework/render.js';
-import FormEdit from '../view/form-edit.js';
+import { render, RenderPosition } from '../framework/render.js';
 import Filters from '../view/filters.js';
 import Sorting from '../view/sorting.js';
-import Waypoint from '../view/waypoint.js';
 import ButtonNewEvent from '../view/button-new-event.js';
 import NoEvent from '../view/no-event.js';
 import TripInfo from '../view/trip-info.js';
 import { generateFilter } from '../mock/filter.js';
+import WaypointPresenter from './waypoint-presenter.js';
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
@@ -28,44 +27,11 @@ export default class TripPresenter {
   }
 
   #renderWaypoint(point) {
-    const escKeyDownHandler = (evt) => {
-      if (evt.key === 'Escape') {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    };
-
-    const waypoint = new Waypoint({
-      waypoint: point,
-      offers: [...this.#waypointModel.getOffersById(point.type, point.offersId)],
-      destination: this.#waypointModel.getDestinationsById(point.destination),
-      onEditClick: () => {
-        replacePointToForm();
-        document.addEventListener('keydown', escKeyDownHandler);
-      }
+    const waypointPresenter = new WaypointPresenter({
+      mainContainer: this.#mainContainer,
+      waypointModel: this.#waypointModel,
     });
-
-    const formEdit = new FormEdit({
-      waypoint: point,
-      offersType: this.#waypointModel.getOffersByType(point.type),
-      offers: [...this.#waypointModel.getOffersById(point.type, point.offersId)],
-      destination: this.#waypointModel.getDestinationsById(point.destination),
-      destinationAll: this.#waypointModel.destinations,
-      onFormSubmit: () => {
-        replaceFormToPoint();
-        document.removeEventListener('keydown', escKeyDownHandler);
-      }
-    });
-
-    function replacePointToForm() {
-      replace(formEdit, waypoint);
-    }
-
-    function replaceFormToPoint() {
-      replace(waypoint, formEdit);
-    }
-    render(waypoint, this.#mainContainer);
+    waypointPresenter.init(point);
   }
 
   #renderFilters() {
