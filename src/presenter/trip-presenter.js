@@ -6,6 +6,7 @@ import NoEvent from '../view/no-event.js';
 import TripInfo from '../view/trip-info.js';
 import { generateFilter } from '../mock/filter.js';
 import WaypointPresenter from './waypoint-presenter.js';
+import WaypointListView from '../view/waypoint-list-view.js';
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
@@ -13,22 +14,25 @@ export default class TripPresenter {
   #sorting = new Sorting();
   #buttonNewEvent = new ButtonNewEvent();
   #tripInfo = new TripInfo();
+  #waypointListComponent;
   #waypoints = [];
 
   constructor({ headerContainer, mainContainer, waypointModel }) {
     this.#headerContainer = headerContainer;
     this.#mainContainer = mainContainer;
     this.#waypointModel = waypointModel;
+    this.#waypointListComponent = new WaypointListView();
   }
 
   init() {
     this.#waypoints = [...this.#waypointModel.waypoints];
     this.#renderApp();
+    render(this.#waypointListComponent, this.#mainContainer);
   }
 
   #renderWaypoint(point) {
     const waypointPresenter = new WaypointPresenter({
-      mainContainer: this.#mainContainer,
+      waypointListComponent: this.#waypointListComponent,
       waypointModel: this.#waypointModel,
     });
     waypointPresenter.init(point);

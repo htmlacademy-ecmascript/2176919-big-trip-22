@@ -62,15 +62,18 @@ function createRollupButton() {
 function createWaypointTemplate({ waypoint, offers, destination }) {
   const { basePrice, dateFrom, dateTo, } = waypoint;
 
-  return (`<div class="event">
-  ${createStartDateTemplate(dateFrom)}
-  ${createTypeEventTemplate(waypoint, destination)}
-  ${createScheduleTemplate(dateFrom, dateTo)}
-  ${createPriceTemplate(basePrice)}
-  ${createOffersTemplate(offers)}
-  ${createFavoriteButton(waypoint)}
-  ${createRollupButton()}
-</div>`);
+  return (`
+  <li class="trip-events__item">
+    <div class="event">
+    ${createStartDateTemplate(dateFrom)}
+    ${createTypeEventTemplate(waypoint, destination)}
+    ${createScheduleTemplate(dateFrom, dateTo)}
+    ${createPriceTemplate(basePrice)}
+    ${createOffersTemplate(offers)}
+    ${createFavoriteButton(waypoint)}
+    ${createRollupButton()}
+    </div>
+  </li>`);
 }
 
 export default class Waypoint extends AbstractView {

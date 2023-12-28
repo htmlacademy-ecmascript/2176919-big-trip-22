@@ -3,14 +3,14 @@ import Waypoint from '../view/waypoint.js';
 import FormEdit from '../view/form-edit.js';
 
 export default class WaypointPresenter {
-  #mainContainer;
+  #waypointListComponent;
   #waypointModel;
   #waypointComponent = null;
   #waypointEditComponent = null;
   #waypoint;
 
-  constructor({ mainContainer, waypointModel }) {
-    this.#mainContainer = mainContainer;
+  constructor({ waypointListComponent, waypointModel }) {
+    this.#waypointListComponent = waypointListComponent;
     this.#waypointModel = waypointModel;
   }
 
@@ -37,13 +37,13 @@ export default class WaypointPresenter {
     });
 
     if (prevWaypointComponent === null || prevWaypointEditComponent === null) {
-      render(this.#waypointComponent, this.#mainContainer);
+      render(this.#waypointComponent, this.#waypointListComponent.element);
       return;
     }
-    if (this.#mainContainer.contains(prevWaypointComponent.element)) {
+    if (this.#waypointListComponent.contains(prevWaypointComponent.element)) {
       replace(this.#waypointComponent, prevWaypointComponent);
     }
-    if (this.#mainContainer.contains(prevWaypointEditComponent.element)) {
+    if (this.#waypointListComponent.contains(prevWaypointEditComponent.element)) {
       replace(this.#waypointEditComponent, prevWaypointEditComponent);
     }
 
