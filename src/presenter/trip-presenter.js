@@ -7,6 +7,7 @@ import TripInfo from '../view/trip-info.js';
 import { generateFilter } from '../mock/filter.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
+import { updateItem } from '../mock/utils.js';
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
@@ -44,6 +45,11 @@ export default class TripPresenter {
     this.#waypointPresenters.forEach((presenter) => presenter.destroy());
     this.#waypointPresenters.clear();
   }
+
+  #handleWaypointChange = (updatedWaypoint) => {
+    this.#waypoints = updateItem(this.#waypoints, updatedWaypoint);
+    this.#waypointPresenters.get(updatedWaypoint.id).init(updatedWaypoint);
+  };
 
   #renderFilters() {
     const filters = generateFilter(this.#waypoints);
