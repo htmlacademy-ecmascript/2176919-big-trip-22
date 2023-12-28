@@ -36,6 +36,7 @@ export default class TripPresenter {
     const waypointPresenter = new WaypointPresenter({
       waypointListComponent: this.#waypointListComponent,
       waypointModel: this.#waypointModel,
+      onDataChange: this.#handleWaypointChange,
     });
     waypointPresenter.init(point);
     this.#waypointPresenters.set(point.id, waypointPresenter);

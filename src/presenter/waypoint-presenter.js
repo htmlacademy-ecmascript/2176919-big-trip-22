@@ -3,15 +3,17 @@ import Waypoint from '../view/waypoint.js';
 import FormEdit from '../view/form-edit.js';
 
 export default class WaypointPresenter {
-  #waypointListComponent;
-  #waypointModel;
+  #waypointListComponent = null;
+  #waypointModel = null;
   #waypointComponent = null;
   #waypointEditComponent = null;
-  #waypoint;
+  #waypoint = null;
+  #handleDataChange = null;
 
-  constructor({ waypointListComponent, waypointModel }) {
+  constructor({ waypointListComponent, waypointModel, onDataChange }) {
     this.#waypointListComponent = waypointListComponent;
     this.#waypointModel = waypointModel;
+    this.#handleDataChange = onDataChange;
   }
 
   init(point) {
@@ -25,6 +27,7 @@ export default class WaypointPresenter {
       offers: [...this.#waypointModel.getOffersById(point.type, point.offersId)],
       destination: this.#waypointModel.getDestinationsById(point.destination),
       onEditClick: this.#handleEditClick,
+      onFavoriteClick: this.#handleFavoriteClick,
     });
 
     this.#waypointEditComponent = new FormEdit({
@@ -40,10 +43,10 @@ export default class WaypointPresenter {
       render(this.#waypointComponent, this.#waypointListComponent.element);
       return;
     }
-    if (this.#waypointListComponent.contains(prevWaypointComponent.element)) {
+    if (this.#waypointListComponent.element.contains(prevWaypointComponent.element)) {
       replace(this.#waypointComponent, prevWaypointComponent);
     }
-    if (this.#waypointListComponent.contains(prevWaypointEditComponent.element)) {
+    if (this.#waypointListComponent.element.contains(prevWaypointEditComponent.element)) {
       replace(this.#waypointEditComponent, prevWaypointEditComponent);
     }
 
@@ -77,7 +80,12 @@ export default class WaypointPresenter {
     this.#replacePointToForm();
   };
 
-  #handleFormSubmit = () => {
+  #handleFavoriteClick = () => {
+    this.#handleDataChange({ ...this.#waypoint, isFavorite: !this.#waypoint.isFavorite });
+  };
+
+  #handleFormSubmit = (point) => {
+    this.#handleDataChange(point);
     this.#replaceFormToPoint();
   };
 }

@@ -123,7 +123,7 @@ function createDestinationTemplate(destination) {
     </section>`);
 }
 
-function createFormEditTemplate({ waypoint, offers, destination, offersType, destinationAll }) {
+function createFormEditTemplate(waypoint, offers, destination, offersType, destinationAll) {
 
   return (`
   <li class="trip-events__item">
@@ -145,18 +145,20 @@ function createFormEditTemplate({ waypoint, offers, destination, offersType, des
 }
 
 export default class FormEdit extends AbstractView {
-  #stat;
+  #waypoint;
+  #offers;
+  #destination;
+  #offersType;
+  #destinationAll;
   #handleFormSubmit;
 
   constructor({ waypoint, offers, destination, offersType, destinationAll, onFormSubmit }) {
     super();
-    this.#stat = {
-      waypoint,
-      offers,
-      destination,
-      offersType,
-      destinationAll
-    };
+    this.#waypoint = waypoint;
+    this.#offers = offers;
+    this.#destination = destination;
+    this.#offersType = offersType;
+    this.#destinationAll = destinationAll;
 
     this.#handleFormSubmit = onFormSubmit;
     this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
@@ -165,11 +167,11 @@ export default class FormEdit extends AbstractView {
   }
 
   get template() {
-    return createFormEditTemplate(this.#stat);
+    return createFormEditTemplate(this.#waypoint, this.#offers, this.#destination, this.#offersType, this.#destinationAll);
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(this.#waypoint);
   };
 }
