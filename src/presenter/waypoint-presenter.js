@@ -2,6 +2,10 @@ import { render, replace, remove } from '../framework/render.js';
 import Waypoint from '../view/waypoint.js';
 import FormEdit from '../view/form-edit.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
 export default class WaypointPresenter {
   #waypointListComponent = null;
   #waypointModel = null;
@@ -9,11 +13,14 @@ export default class WaypointPresenter {
   #waypointEditComponent = null;
   #waypoint = null;
   #handleDataChange = null;
+  #handleModeChange = null;
+  #mode = Mode.DEFAULT;
 
-  constructor({ waypointListComponent, waypointModel, onDataChange }) {
+  constructor({ waypointListComponent, waypointModel, onDataChange, onModeChange }) {
     this.#waypointListComponent = waypointListComponent;
     this.#waypointModel = waypointModel;
     this.#handleDataChange = onDataChange;
+    this.#handleModeChange = onModeChange;
   }
 
   init(point) {
@@ -43,10 +50,10 @@ export default class WaypointPresenter {
       render(this.#waypointComponent, this.#waypointListComponent.element);
       return;
     }
-    if (this.#waypointListComponent.element.contains(prevWaypointComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#waypointComponent, prevWaypointComponent);
     }
-    if (this.#waypointListComponent.element.contains(prevWaypointEditComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#waypointEditComponent, prevWaypointEditComponent);
     }
 
@@ -66,14 +73,23 @@ export default class WaypointPresenter {
     }
   };
 
+  resetView() {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#replaceFormToPoint();
+    }
+  }
+
   #replacePointToForm() {
     replace(this.#waypointEditComponent, this.#waypointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
+    this.#handleModeChange();
+    this.#mode = Mode.EDITING;
   }
 
   #replaceFormToPoint() {
     replace(this.#waypointComponent, this.#waypointEditComponent);
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.DEFAULT;
   }
 
   #handleEditClick = () => {

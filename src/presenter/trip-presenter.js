@@ -37,6 +37,7 @@ export default class TripPresenter {
       waypointListComponent: this.#waypointListComponent,
       waypointModel: this.#waypointModel,
       onDataChange: this.#handleWaypointChange,
+      onModeChange: this.#handleModeChange,
     });
     waypointPresenter.init(point);
     this.#waypointPresenters.set(point.id, waypointPresenter);
@@ -46,6 +47,10 @@ export default class TripPresenter {
     this.#waypointPresenters.forEach((presenter) => presenter.destroy());
     this.#waypointPresenters.clear();
   }
+
+  #handleModeChange = () => {
+    this.#waypointPresenters.forEach((presenter) => presenter.resetView());
+  };
 
   #handleWaypointChange = (updatedWaypoint) => {
     this.#waypoints = updateItem(this.#waypoints, updatedWaypoint);
