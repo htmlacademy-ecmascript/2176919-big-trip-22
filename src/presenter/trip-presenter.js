@@ -16,6 +16,7 @@ export default class TripPresenter {
   #tripInfo = new TripInfo();
   #waypointListComponent;
   #waypoints = [];
+  #waypointPresenters = new Map();
 
   constructor({ headerContainer, mainContainer, waypointModel }) {
     this.#headerContainer = headerContainer;
@@ -36,6 +37,12 @@ export default class TripPresenter {
       waypointModel: this.#waypointModel,
     });
     waypointPresenter.init(point);
+    this.#waypointPresenters.set(point.id, waypointPresenter);
+  }
+
+  #clearWaypointList() {
+    this.#waypointPresenters.forEach((presenter) => presenter.destroy());
+    this.#waypointPresenters.clear();
   }
 
   #renderFilters() {
