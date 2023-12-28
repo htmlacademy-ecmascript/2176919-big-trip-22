@@ -5,7 +5,7 @@ import { filter } from './utils.js';
  * @typedef {Object} Filter
  * @property {number} Filter.count
  * @property {string} Filter.type
- * @param {RandomWaypoint[]} an array of random points
+ * @param {RandomWaypoint[]} waypoints - an array of random points
  * @returns {Filter[]}
  */
 
