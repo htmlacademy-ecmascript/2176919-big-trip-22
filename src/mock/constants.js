@@ -36,4 +36,12 @@ const FilterType = {
   FUTURE: 'future',
 };
 
-export { TYPE, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE, DATE_FORMAT, CLASS_NAME, TextNoEvent, FilterType };
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
+const SORTING = ['day', 'event', 'time', 'price', 'offers'];
+const SORT_TYPE = ['day', 'time', 'price'];
+
+export { TYPE, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE, DATE_FORMAT, CLASS_NAME, TextNoEvent, FilterType, Mode, SORTING, SORT_TYPE };
