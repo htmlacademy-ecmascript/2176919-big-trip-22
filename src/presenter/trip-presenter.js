@@ -29,7 +29,7 @@ export default class TripPresenter {
   }
 
   init() {
-    this.#waypoints = [...this.#waypointModel.waypoints];
+    this.#waypoints = [...this.#waypointModel.waypoints].sort(sortWaypointByDate);
     this.#renderApp();
     render(this.#waypointListComponent, this.#mainContainer);
   }
@@ -48,6 +48,12 @@ export default class TripPresenter {
   #clearWaypointList() {
     this.#waypointPresenters.forEach((presenter) => presenter.destroy());
     this.#waypointPresenters.clear();
+  }
+
+  #renderWaypointList() {
+    for (let i = 0; i < this.#waypoints.length; i++) {
+      this.#renderWaypoint(this.#waypoints[i]);
+    }
   }
 
   #handleModeChange = () => {
@@ -98,8 +104,8 @@ export default class TripPresenter {
       return;
     }
     this.#sortWaypoints(sortType);
-    // - Очищаем список
-    // - Рендерим список заново
+    this.#clearWaypointList();
+    this.#renderWaypointList();
   };
 
   #renderSort() {
@@ -119,8 +125,6 @@ export default class TripPresenter {
       return;
     }
     this.#renderSort();
-    for (let i = 0; i < this.#waypoints.length; i++) {
-      this.#renderWaypoint(this.#waypoints[i]);
-    }
+    this.#renderWaypointList();
   }
 }

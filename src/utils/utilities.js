@@ -40,21 +40,23 @@ function updateItem(items, update) {
 }
 
 function sortWaypointByDate(waypointA, waypointB) {
-  if (waypointA.dateFrom < waypointB.dateFrom) {
+  if (waypointA.dateFrom > waypointB.dateFrom) {
     return 1;
   }
-  if (waypointA.dateFrom > waypointB.dateFrom) {
+  if (waypointA.dateFrom < waypointB.dateFrom) {
     return -1;
   }
   return 0;
 }
 
+const getDurationBySort = (start, end) => dayjs.duration(dayjs(end).diff(dayjs(start)));
+
 function sortWaypointByDuration(waypointA, waypointB) {
 
-  if (getDuration(waypointA.dateFrom, waypointA.dateTo) > getDuration(waypointB.dateFrom, waypointB.dateTo)) {
+  if (getDurationBySort(waypointA.dateFrom, waypointA.dateTo) < getDurationBySort(waypointB.dateFrom, waypointB.dateTo)) {
     return 1;
   }
-  if (getDuration(waypointA.dateFrom, waypointA.dateTo) < getDuration(waypointB.dateFrom, waypointB.dateTo)) {
+  if (getDurationBySort(waypointA.dateFrom, waypointA.dateTo) > getDurationBySort(waypointB.dateFrom, waypointB.dateTo)) {
     return -1;
   }
   return 0;
