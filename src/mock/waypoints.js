@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { TYPE, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE } from './constants.js';
+import { TYPE, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE } from './data.js';
 import { getRandomInteger, getRandomArrayElement } from './utils.js';
 
 const mockOptions = [

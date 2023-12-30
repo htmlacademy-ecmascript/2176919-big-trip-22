@@ -4,15 +4,15 @@ import Sorting from '../view/sorting.js';
 import ButtonNewEvent from '../view/button-new-event.js';
 import NoEvent from '../view/no-event.js';
 import TripInfo from '../view/trip-info.js';
-import { generateFilter } from '../mock/filter.js';
+import { generateFilter } from '../utils/filter.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
-import { updateItem } from '../mock/utils.js';
+import { updateItem } from '../utils/utilities.js';
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
   #waypointModel;
-  #sorting = new Sorting();
+  #sorting;
   #buttonNewEvent = new ButtonNewEvent();
   #tripInfo = new TripInfo();
   #waypointListComponent;
@@ -74,6 +74,20 @@ export default class TripPresenter {
     render(new NoEvent(), this.#mainContainer);
   }
 
+  #handleSortTypeChange = (sortType) => {
+    // - Сортируем задачи
+    // - Очищаем список
+    // - Рендерим список заново
+  };
+
+  #renderSort() {
+    this.#sorting = new Sorting({
+      onSortTypeChange: this.#handleSortTypeChange
+    });
+
+    render(this.#sorting, this.#mainContainer);
+  }
+
   #renderApp() {
     this.#renderFilters();
     this.#renderButtonNewEvent();
@@ -82,7 +96,7 @@ export default class TripPresenter {
       this.#renderNoEvent();
       return;
     }
-    render(this.#sorting, this.#mainContainer);
+    this.#renderSort();
     for (let i = 0; i < this.#waypoints.length; i++) {
       this.#renderWaypoint(this.#waypoints[i]);
     }

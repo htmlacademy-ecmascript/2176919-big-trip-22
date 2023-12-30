@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { SORTING, SORT_TYPE } from '../mock/constants.js';
+import { SORTING, SORT_TYPE } from '../utils/constants.js';
 
 function createSortingTemplate() {
   return (
@@ -11,7 +11,25 @@ function createSortingTemplate() {
     </form>`);
 }
 export default class Sorting extends AbstractView {
+  #handleSortTypeChange;
+
+  constructor({ onSortTypeChange }) {
+    super();
+    this.#handleSortTypeChange = onSortTypeChange;
+
+    this.element.addEventListener('click', this.#sortTypeChangeHandler);
+  }
+
   get template() {
     return createSortingTemplate();
   }
+
+  #sortTypeChangeHandler = (evt) => {
+    if (evt.target.tagName !== 'INPUT') {
+      return;
+    }
+
+    evt.preventDefault();
+    this.#handleSortTypeChange(evt.target.dataset.sortType);
+  };
 }

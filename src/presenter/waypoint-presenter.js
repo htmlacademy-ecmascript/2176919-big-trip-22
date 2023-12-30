@@ -1,7 +1,7 @@
 import { render, replace, remove } from '../framework/render.js';
 import Waypoint from '../view/waypoint.js';
 import FormEdit from '../view/form-edit.js';
-import { Mode } from '../mock/constants.js';
+import { Mode } from '../utils/constants.js';
 export default class WaypointPresenter {
   #waypointListComponent = null;
   #waypointModel = null;

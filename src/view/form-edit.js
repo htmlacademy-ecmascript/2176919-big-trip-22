@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDueDate } from '../mock/utils.js';
-import { DATE_FORMAT, TYPE, CLASS_NAME } from '../mock/constants.js';
+import { humanizeDueDate } from '../utils/utilities.js';
+import { TYPE } from '../mock/data.js';
+import { DATE_FORMAT, CLASS_NAME } from '../utils/constants.js';
 
 function createTypeTemplate(waypoint, destination, destinationAll) {
   const { type, id } = waypoint;
