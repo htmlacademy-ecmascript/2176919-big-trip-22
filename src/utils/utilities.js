@@ -39,4 +39,35 @@ function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export { humanizeDueDate, getDuration, filter, updateItem };
+function sortWaypointByDate(waypointA, waypointB) {
+  if (waypointA.dateFrom < waypointB.dateFrom) {
+    return 1;
+  }
+  if (waypointA.dateFrom > waypointB.dateFrom) {
+    return -1;
+  }
+  return 0;
+}
+
+function sortWaypointByDuration(waypointA, waypointB) {
+
+  if (getDuration(waypointA.dateFrom, waypointA.dateTo) > getDuration(waypointB.dateFrom, waypointB.dateTo)) {
+    return 1;
+  }
+  if (getDuration(waypointA.dateFrom, waypointA.dateTo) < getDuration(waypointB.dateFrom, waypointB.dateTo)) {
+    return -1;
+  }
+  return 0;
+}
+
+function sortWaypointByPrice(waypointA, waypointB) {
+  if (Number(waypointA.basePrice) < Number(waypointB.basePrice)) {
+    return 1;
+  }
+  if (Number(waypointA.basePrice) > Number(waypointB.basePrice)) {
+    return -1;
+  }
+  return 0;
+}
+
+export { humanizeDueDate, getDuration, filter, updateItem, sortWaypointByDate, sortWaypointByDuration, sortWaypointByPrice };
