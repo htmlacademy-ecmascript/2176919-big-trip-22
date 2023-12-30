@@ -7,7 +7,8 @@ import TripInfo from '../view/trip-info.js';
 import { generateFilter } from '../utils/filter.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
-import { updateItem } from '../utils/utilities.js';
+import { updateItem, sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration } from '../utils/utilities.js';
+import { SORT_TYPE } from '../utils/constants.js';
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
@@ -18,6 +19,7 @@ export default class TripPresenter {
   #waypointListComponent;
   #waypoints = [];
   #waypointPresenters = new Map();
+  #currentSortType = SORT_TYPE[0];
 
   constructor({ headerContainer, mainContainer, waypointModel }) {
     this.#headerContainer = headerContainer;
@@ -74,8 +76,28 @@ export default class TripPresenter {
     render(new NoEvent(), this.#mainContainer);
   }
 
+  #sortWaypoints(sortType) {
+    switch (sortType) {
+      case SORT_TYPE[0]:
+        this.#waypoints.sort(sortWaypointByDate);
+        break;
+      case SORT_TYPE[1]:
+        this.#waypoints.sort(sortWaypointByDuration);
+        break;
+      case SORT_TYPE[2]:
+        this.#waypoints.sort(sortWaypointByPrice);
+        break;
+      default:
+        this.#waypoints.sort(sortWaypointByDate);
+    }
+    this.#currentSortType = sortType;
+  }
+
   #handleSortTypeChange = (sortType) => {
-    // - Сортируем задачи
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+    this.#sortWaypoints(sortType);
     // - Очищаем список
     // - Рендерим список заново
   };

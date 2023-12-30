@@ -195,6 +195,21 @@ const mockDate = [
     'date-from': '2023-12-15T06:57:04.116Z',
     'date-to': '2023-12-15T17:50:04.116Z',
     'is-favorite': true,
+  },
+  {
+    'date-from': '2024-01-02T23:20:06.925Z',
+    'date-to': '2024-01-04T10:17:06.925Z',
+    'is-favorite': false,
+  },
+  {
+    'date-from': '2024-02-03T02:48:06.925Z',
+    'date-to': '2024-02-04T06:06:06.925Z',
+    'is-favorite': true,
+  },
+  {
+    'date-from': '2024-02-12T19:13:06.925Z',
+    'date-to': '2024-02-13T13:38:06.925Z',
+    'is-favorite': true,
   }
 ];
 
