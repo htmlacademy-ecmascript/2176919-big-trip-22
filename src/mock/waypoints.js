@@ -2,6 +2,22 @@ import { v4 as uuidv4 } from 'uuid';
 import { TYPE, CITIES, DESCRIPTION, PHOTO, OFFER_TITLE } from './data.js';
 import { getRandomInteger, getRandomArrayElement } from './utils.js';
 
+/**
+ * @typedef {{
+ *  id: string
+ *  title: string
+ *  price: number
+ * }} offer
+ */
+
+/**
+ * Генерация опций принадлежащих типам точки маршрута
+ * @typedef {Object} AllOffers
+ * @type {object} offers
+    * @property {string} type
+    * @property {offer[]} offers
+ */
+
 const mockOptions = [
   {
     'type': TYPE[0],
@@ -127,6 +143,22 @@ const mockOptions = [
     }]
   }
 ];
+
+/**
+ * @typedef {{
+ *  src: string
+ *  description: string
+ * }} Picture
+ */
+
+/**
+ * @typedef {{
+ *  id: string
+ *  description: string
+ *  name: string
+ *  pictures: Picture[]
+ * }} Destination
+ */
 
 const mockDestination = [
   {
