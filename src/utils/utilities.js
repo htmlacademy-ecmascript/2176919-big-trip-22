@@ -49,9 +49,9 @@ function sortWaypointByDate(waypointA, waypointB) {
   return 0;
 }
 
-const getDurationBySort = (start, end) => dayjs.duration(dayjs(end).diff(dayjs(start)));
-
 function sortWaypointByDuration(waypointA, waypointB) {
+
+  const getDurationBySort = (start, end) => dayjs.duration(dayjs(end).diff(dayjs(start)));
 
   if (getDurationBySort(waypointA.dateFrom, waypointA.dateTo) < getDurationBySort(waypointB.dateFrom, waypointB.dateTo)) {
     return 1;

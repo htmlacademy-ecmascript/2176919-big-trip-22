@@ -1,8 +1,8 @@
-const DATE_FORMAT = {
-  day: 'MMM D',
-  hoursMinutes: 'HH:mm',
-  year: 'DD/MM/YY HH:mm',
-  fullDate: 'YYYY-MM-DD',
+const DateFormat = {
+  DAY: 'MMM D',
+  HOURS_MINUTES: 'HH:mm',
+  YEAR: 'DD/MM/YY HH:mm',
+  FULL_DATE: 'YYYY-MM-DD',
 };
 const CLASS_NAME = {
   'Add luggage': 'luggage',
@@ -31,6 +31,10 @@ const Mode = {
 };
 
 const SORTING = ['day', 'event', 'time', 'price', 'offers'];
-const SORT_TYPE = ['day', 'time', 'price'];
+const SortType = {
+  DAY: 'day',
+  TIME: 'time',
+  PRICE: 'price',
+};
 
-export { DATE_FORMAT, CLASS_NAME, TextNoEvent, FilterType, Mode, SORTING, SORT_TYPE };
+export { DateFormat, CLASS_NAME, TextNoEvent, FilterType, Mode, SORTING, SortType };

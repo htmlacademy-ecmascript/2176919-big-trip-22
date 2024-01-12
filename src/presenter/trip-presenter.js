@@ -8,7 +8,7 @@ import { generateFilter } from '../utils/filter.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
 import { updateItem, sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration } from '../utils/utilities.js';
-import { SORT_TYPE } from '../utils/constants.js';
+import { SortType } from '../utils/constants.js';
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
@@ -19,7 +19,7 @@ export default class TripPresenter {
   #waypointListComponent;
   #waypoints = [];
   #waypointPresenters = new Map();
-  #currentSortType = SORT_TYPE[0];
+  #currentSortType = SortType.DAY;
 
   constructor({ headerContainer, mainContainer, waypointModel }) {
     this.#headerContainer = headerContainer;
@@ -84,13 +84,13 @@ export default class TripPresenter {
 
   #sortWaypoints(sortType) {
     switch (sortType) {
-      case SORT_TYPE[0]:
+      case SortType.DAY:
         this.#waypoints.sort(sortWaypointByDate);
         break;
-      case SORT_TYPE[1]:
+      case SortType.TIME:
         this.#waypoints.sort(sortWaypointByDuration);
         break;
-      case SORT_TYPE[2]:
+      case SortType.PRICE:
         this.#waypoints.sort(sortWaypointByPrice);
         break;
       default:
@@ -110,7 +110,7 @@ export default class TripPresenter {
 
   #renderSort() {
     this.#sorting = new Sorting({
-      onSortTypeChange: this.#handleSortTypeChange
+      onSortTypeChange: this.#handleSortTypeChange,
     });
 
     render(this.#sorting, this.#mainContainer);

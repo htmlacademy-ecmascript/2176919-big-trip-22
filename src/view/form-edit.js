@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeDueDate } from '../utils/utilities.js';
 import { TYPE } from '../mock/data.js';
-import { DATE_FORMAT, CLASS_NAME } from '../utils/constants.js';
+import { DateFormat, CLASS_NAME } from '../utils/constants.js';
 
 function createTypeTemplate(waypoint, destination, destinationAll) {
   const { type, id } = waypoint;
@@ -41,10 +41,10 @@ function createDateTemplate(waypoint) {
   return (`
     <div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-${id}">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, DATE_FORMAT.year)}">
+      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, DateFormat.YEAR)}">
       &mdash;
       <label class="visually-hidden" for="event-end-time-${id}">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, DATE_FORMAT.year)}">
+      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, DateFormat.YEAR)}">
     </div>`);
 }
 
