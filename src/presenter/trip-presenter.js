@@ -5,6 +5,7 @@ import ButtonNewEvent from '../view/button-new-event.js';
 import NoEvent from '../view/no-event.js';
 import TripInfo from '../view/trip-info.js';
 import { generateFilter } from '../utils/filter.js';
+import { generateSorting } from '../utils/sort.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
 import { updateItem, sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration } from '../utils/utilities.js';
@@ -20,6 +21,7 @@ export default class TripPresenter {
   #waypoints = [];
   #waypointPresenters = new Map();
   #currentSortType = SortType.DAY;
+  #sortingState = generateSorting(this.#currentSortType);
 
   constructor({ headerContainer, mainContainer, waypointModel }) {
     this.#headerContainer = headerContainer;
@@ -111,6 +113,7 @@ export default class TripPresenter {
   #renderSort() {
     this.#sorting = new Sorting({
       onSortTypeChange: this.#handleSortTypeChange,
+      sorting: this.#sortingState,
     });
 
     render(this.#sorting, this.#mainContainer);
