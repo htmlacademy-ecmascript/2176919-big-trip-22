@@ -1,4 +1,4 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeDueDate } from '../utils/utilities.js';
 import { TYPE } from '../mock/data.js';
 import { DateFormat, CLASS_NAME } from '../utils/constants.js';
@@ -129,8 +129,14 @@ function createDestinationTemplate(destination) {
     </section>`);
 }
 
-function createFormEditTemplate(waypoint, offers, destination, offersType, destinationAll) {
-
+function createFormEditTemplate(waypoint, offers, destination, offersType, destinationAll, offersAll, _state) {
+  console.log('waypoint', waypoint)
+  console.log('offers', offers)
+  console.log('destination', destination)
+  console.log('offersType', offersType)
+  console.log('destinationAll', destinationAll)
+  console.log('offersAll', offersAll)
+  console.log('_state', _state)
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -150,34 +156,66 @@ function createFormEditTemplate(waypoint, offers, destination, offersType, desti
   </li>`);
 }
 
-export default class FormEdit extends AbstractView {
+export default class FormEdit extends AbstractStatefulView {
   #waypoint;
   #offers;
   #destination;
   #offersType;
   #destinationAll;
+  #offersAll;
   #handleFormSubmit;
 
-  constructor({ waypoint, offers, destination, offersType, destinationAll, onFormSubmit }) {
+  constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit }) {
     super();
+    this._setState(FormEdit.parseWaypointToState(waypoint));
+    this._setState(FormEdit.parseDestinationToState(destination));
     this.#waypoint = waypoint;
     this.#offers = offers;
     this.#destination = destination;
     this.#offersType = offersType;
     this.#destinationAll = destinationAll;
-
+    this.#offersAll = offersAll;
     this.#handleFormSubmit = onFormSubmit;
-    this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
-    this.element.querySelector('.event__save-btn').addEventListener('click', (evt) => evt.preventDefault());
+    this._restoreHandlers();
+
   }
 
   get template() {
-    return createFormEditTemplate(this.#waypoint, this.#offers, this.#destination, this.#offersType, this.#destinationAll);
+    return createFormEditTemplate(this.#waypoint, this.#offers, this.#destination, this.#offersType, this.#destinationAll, this.#offersAll, this._state);
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
+    this.element.querySelector('.event__save-btn').addEventListener('click', (evt) => evt.preventDefault());
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(this.#waypoint);
   };
+
+  #typeToggleHandler = (evt) => {
+    this.updateElement({
+      type: evt.target.value,
+    });
+    console.log(this._state)
+  };
+
+  static parseWaypointToState(waypoint) {
+    const { type, dateFrom, dateTo } = waypoint;
+    return ({
+      type,
+      dateFrom,
+      dateTo,
+    });
+  }
+
+  static parseDestinationToState(destination) {
+    const { name } = destination;
+    return ({
+      name,
+    });
+  }
 }

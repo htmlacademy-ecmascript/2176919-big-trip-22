@@ -39,6 +39,7 @@ export default class WaypointPresenter {
       offers: [...this.#waypointModel.getOffersById(point.type, point.offersId)],
       destination: this.#waypointModel.getDestinationsById(point.destination),
       destinationAll: this.#waypointModel.destinations,
+      offersAll: [...this.#waypointModel.offers],
       onFormSubmit: this.#handleFormSubmit,
     });
 
