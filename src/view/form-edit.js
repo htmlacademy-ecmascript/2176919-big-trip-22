@@ -129,14 +129,15 @@ function createDestinationTemplate(destination) {
     </section>`);
 }
 
-function createFormEditTemplate(waypoint, offers, destination, offersType, destinationAll, offersAll, _state) {
+function createFormEditTemplate(_state, offers, destination, destinationAll, offersAll) {
+  const { waypoint, offersType } = _state;
+  console.log('_state', _state)
   console.log('waypoint', waypoint)
   console.log('offers', offers)
   console.log('destination', destination)
   console.log('offersType', offersType)
   console.log('destinationAll', destinationAll)
   console.log('offersAll', offersAll)
-  console.log('_state', _state)
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -157,31 +158,25 @@ function createFormEditTemplate(waypoint, offers, destination, offersType, desti
 }
 
 export default class FormEdit extends AbstractStatefulView {
-  #waypoint;
   #offers;
   #destination;
-  #offersType;
   #destinationAll;
   #offersAll;
   #handleFormSubmit;
 
   constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit }) {
     super();
-    this._setState(FormEdit.parseWaypointToState(waypoint));
-    this._setState(FormEdit.parseDestinationToState(destination));
-    this.#waypoint = waypoint;
+    this._setState(FormEdit.addsValuesPointToState(waypoint, offersType));
     this.#offers = offers;
     this.#destination = destination;
-    this.#offersType = offersType;
     this.#destinationAll = destinationAll;
     this.#offersAll = offersAll;
     this.#handleFormSubmit = onFormSubmit;
     this._restoreHandlers();
-
   }
 
   get template() {
-    return createFormEditTemplate(this.#waypoint, this.#offers, this.#destination, this.#offersType, this.#destinationAll, this.#offersAll, this._state);
+    return createFormEditTemplate(this._state, this.#offers, this.#destination, this.#destinationAll, this.#offersAll);
   }
 
   _restoreHandlers() {
@@ -193,29 +188,29 @@ export default class FormEdit extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(this.#waypoint);
+    this.#handleFormSubmit(FormEdit.retrievesValuesStateToPoint(this._state));
   };
 
   #typeToggleHandler = (evt) => {
     this.updateElement({
-      type: evt.target.value,
+      waypoint: {
+        ...this._state.waypoint,
+        type: evt.target.value,
+      },
+      offersType: this.#offersAll.find((offer) => offer.type === evt.target.value),
     });
-    console.log(this._state)
+    console.log('_state', this._state)
+    console.log(this.#offersAll.find((offer) => offer.type === evt.target.value))
   };
 
-  static parseWaypointToState(waypoint) {
-    const { type, dateFrom, dateTo } = waypoint;
-    return ({
-      type,
-      dateFrom,
-      dateTo,
-    });
+  static addsValuesPointToState(waypoint, offersType) {
+    return {
+      waypoint: { ...waypoint },
+      offersType: { ...offersType },
+    };
   }
 
-  static parseDestinationToState(destination) {
-    const { name } = destination;
-    return ({
-      name,
-    });
+  static retrievesValuesStateToPoint(state) {
+    return { ...state };
   }
 }
