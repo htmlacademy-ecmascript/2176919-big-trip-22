@@ -1,6 +1,6 @@
 import { getRandomWaypoint, mockDestination, mockOptions } from '../mock/waypoints.js';
 
-const WAYPOINT_COUNT = 1;
+const WAYPOINT_COUNT = 7;
 
 export default class WaypointModel {
   /**

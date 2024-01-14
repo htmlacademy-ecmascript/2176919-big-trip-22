@@ -129,15 +129,9 @@ function createDestinationTemplate(destination) {
     </section>`);
 }
 
-function createFormEditTemplate(_state, offers, destinationAll, offersAll) {
+function createFormEditTemplate(_state, offers, destinationAll) {
   const { waypoint, offersType, destination } = _state;
-  console.log('_state', _state)
-  console.log('waypoint', waypoint)
-  console.log('offers', offers)
-  console.log('destination', destination)
-  console.log('offersType', offersType)
-  console.log('destinationAll', destinationAll)
-  console.log('offersAll', offersAll)
+
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -177,13 +171,29 @@ export default class FormEdit extends AbstractStatefulView {
     return createFormEditTemplate(this._state, this.#offers, this.#destinationAll, this.#offersAll);
   }
 
+  reset(waypoint, offersType, destination) {
+    this.updateElement(
+      FormEdit.addsValuesPointToState(waypoint, offersType, destination),
+    );
+  }
+
   _restoreHandlers() {
     this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#exitsWithoutSaving);
     this.element.querySelector('.event__save-btn').addEventListener('click', (evt) => evt.preventDefault());
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationToggleHandler);
   }
+
+  #exitsWithoutSaving = (evt) => {
+    evt.preventDefault();
+    if (evt.isTrusted) {
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'Escape',
+        keyCode: 27,
+      }));
+    }
+  };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
