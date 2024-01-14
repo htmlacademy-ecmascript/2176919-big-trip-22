@@ -1,5 +1,7 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeDueDate } from '../utils/utilities.js';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 import { TYPE } from '../mock/data.js';
 import { DateFormat, CLASS_NAME } from '../utils/constants.js';
 
@@ -131,6 +133,8 @@ function createDestinationTemplate(destination) {
 
 function createFormEditTemplate(_state, offers, destinationAll) {
   const { waypoint, offersType, destination } = _state;
+  console.log('_state', _state)
+  console.log('offers', offers)
 
   return (`
   <li class="trip-events__item">
@@ -156,6 +160,7 @@ export default class FormEdit extends AbstractStatefulView {
   #destinationAll;
   #offersAll;
   #handleFormSubmit;
+  #datepicker = null;
 
   constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit }) {
     super();
@@ -169,6 +174,15 @@ export default class FormEdit extends AbstractStatefulView {
 
   get template() {
     return createFormEditTemplate(this._state, this.#offers, this.#destinationAll, this.#offersAll);
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this.#datepicker) {
+      this.#datepicker.destroy();
+      this.#datepicker = null;
+    }
   }
 
   reset(waypoint, offersType, destination) {
@@ -218,6 +232,26 @@ export default class FormEdit extends AbstractStatefulView {
       });
     }
   };
+
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      waypoint: {
+        ...this._state.waypoint,
+        dateFrom: userDate,
+      },
+    });
+  };
+
+  #setDatepicker() {
+    this.#datepicker = flatpickr(
+      this.element.querySelector('.event__input--time'),
+      {
+        dateFormat: 'j F',
+        defaultDate: this._state.waypoint.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+      },
+    );
+  }
 
   static addsValuesPointToState(waypoint, offersType, destination) {
     return {
