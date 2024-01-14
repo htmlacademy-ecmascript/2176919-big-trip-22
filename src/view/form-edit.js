@@ -134,8 +134,6 @@ function createDestinationTemplate(destination) {
 function createFormEditTemplate(_state, offers, destinationAll) {
   const { waypoint, offersType, destination } = _state;
   console.log('_state', _state)
-  console.log('offers', offers)
-
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -160,7 +158,8 @@ export default class FormEdit extends AbstractStatefulView {
   #destinationAll;
   #offersAll;
   #handleFormSubmit;
-  #datepicker = null;
+  #datepickerStart;
+  #datepickerEnd;
 
   constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit }) {
     super();
@@ -179,9 +178,13 @@ export default class FormEdit extends AbstractStatefulView {
   removeElement() {
     super.removeElement();
 
-    if (this.#datepicker) {
-      this.#datepicker.destroy();
-      this.#datepicker = null;
+    if (this.#datepickerStart) {
+      this.#datepickerStart.destroy();
+      this.#datepickerStart = null;
+    }
+    if (this.#datepickerEnd) {
+      this.#datepickerEnd.destroy();
+      this.#datepickerEnd = null;
     }
   }
 
@@ -197,6 +200,9 @@ export default class FormEdit extends AbstractStatefulView {
     this.element.querySelector('.event__save-btn').addEventListener('click', (evt) => evt.preventDefault());
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationToggleHandler);
+
+    this.#setDatepickerStart();
+    this.#setDatepickerEnd();
   }
 
   #exitsWithoutSaving = (evt) => {
@@ -242,13 +248,33 @@ export default class FormEdit extends AbstractStatefulView {
     });
   };
 
-  #setDatepicker() {
-    this.#datepicker = flatpickr(
-      this.element.querySelector('.event__input--time'),
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      waypoint: {
+        ...this._state.waypoint,
+        dateTo: userDate,
+      },
+    });
+  };
+
+  #setDatepickerStart() {
+    this.#datepickerStart = flatpickr(
+      this.element.querySelector('[name="event-start-time"]'),
       {
-        dateFormat: 'j F',
+        dateFormat: 'd/m/y h:i',
         defaultDate: this._state.waypoint.dateFrom,
         onChange: this.#dateFromChangeHandler,
+      },
+    );
+  }
+
+  #setDatepickerEnd() {
+    this.#datepickerStart = flatpickr(
+      this.element.querySelector('[name="event-end-time"]'),
+      {
+        dateFormat: 'd/m/y h:i',
+        defaultDate: this._state.waypoint.dateTo,
+        onChange: this.#dateToChangeHandler,
       },
     );
   }
