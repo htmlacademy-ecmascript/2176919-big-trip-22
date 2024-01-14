@@ -129,8 +129,8 @@ function createDestinationTemplate(destination) {
     </section>`);
 }
 
-function createFormEditTemplate(_state, offers, destination, destinationAll, offersAll) {
-  const { waypoint, offersType } = _state;
+function createFormEditTemplate(_state, offers, destinationAll, offersAll) {
+  const { waypoint, offersType, destination } = _state;
   console.log('_state', _state)
   console.log('waypoint', waypoint)
   console.log('offers', offers)
@@ -159,16 +159,14 @@ function createFormEditTemplate(_state, offers, destination, destinationAll, off
 
 export default class FormEdit extends AbstractStatefulView {
   #offers;
-  #destination;
   #destinationAll;
   #offersAll;
   #handleFormSubmit;
 
   constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit }) {
     super();
-    this._setState(FormEdit.addsValuesPointToState(waypoint, offersType));
+    this._setState(FormEdit.addsValuesPointToState(waypoint, offersType, destination));
     this.#offers = offers;
-    this.#destination = destination;
     this.#destinationAll = destinationAll;
     this.#offersAll = offersAll;
     this.#handleFormSubmit = onFormSubmit;
@@ -176,7 +174,7 @@ export default class FormEdit extends AbstractStatefulView {
   }
 
   get template() {
-    return createFormEditTemplate(this._state, this.#offers, this.#destination, this.#destinationAll, this.#offersAll);
+    return createFormEditTemplate(this._state, this.#offers, this.#destinationAll, this.#offersAll);
   }
 
   _restoreHandlers() {
@@ -184,6 +182,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#formSubmitHandler);
     this.element.querySelector('.event__save-btn').addEventListener('click', (evt) => evt.preventDefault());
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationToggleHandler);
   }
 
   #formSubmitHandler = (evt) => {
@@ -199,14 +198,22 @@ export default class FormEdit extends AbstractStatefulView {
       },
       offersType: this.#offersAll.find((offer) => offer.type === evt.target.value),
     });
-    console.log('_state', this._state)
-    console.log(this.#offersAll.find((offer) => offer.type === evt.target.value))
   };
 
-  static addsValuesPointToState(waypoint, offersType) {
+  #destinationToggleHandler = (evt) => {
+    const name = evt.target.value;
+    if (name) {
+      this.updateElement({
+        destination: this.#destinationAll.find((item) => item.name === name),
+      });
+    }
+  };
+
+  static addsValuesPointToState(waypoint, offersType, destination) {
     return {
       waypoint: { ...waypoint },
       offersType: { ...offersType },
+      destination: { ...destination },
     };
   }
 
