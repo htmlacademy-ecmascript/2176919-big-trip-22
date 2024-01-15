@@ -282,6 +282,7 @@ export default class FormEdit extends AbstractStatefulView {
         dateFormat: 'd/m/y h:i',
         defaultDate: this._state.waypoint.dateTo,
         onChange: this.#dateToChangeHandler,
+        minDate: this._state.waypoint.dateFrom,
       },
     );
   }
