@@ -5,6 +5,8 @@ import { Mode } from '../utils/constants.js';
 export default class WaypointPresenter {
   #waypointListComponent = null;
   #waypointModel = null;
+  #offersModel = null;
+  #destinationModel = null;
   #waypointComponent = null;
   #waypointEditComponent = null;
   #waypoint = null;
@@ -14,24 +16,26 @@ export default class WaypointPresenter {
   #handleModeChange = null;
   #mode = Mode.DEFAULT;
 
-  constructor({ waypointListComponent, waypointModel, onDataChange, onModeChange }) {
+  constructor({ waypointListComponent, waypointModel, offersModel, destinationModel, onDataChange, onModeChange }) {
     this.#waypointListComponent = waypointListComponent;
     this.#waypointModel = waypointModel;
+    this.#offersModel = offersModel;
+    this.#destinationModel = destinationModel;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
 
   init(point) {
     this.#waypoint = point;
-    this.#offersType = this.#waypointModel.getOffersByType(point.type);
-    this.#destination = this.#waypointModel.getDestinationsById(point.destination);
+    this.#offersType = this.#offersModel.getOffersByType(point.type);
+    this.#destination = this.#destinationModel.getDestinationsById(point.destination);
 
     const prevWaypointComponent = this.#waypointComponent;
     const prevWaypointEditComponent = this.#waypointEditComponent;
 
     this.#waypointComponent = new Waypoint({
       waypoint: this.#waypoint,
-      offers: [...this.#waypointModel.getOffersById(point.type, point.offersId)],
+      offers: [...this.#offersModel.getOffersById(point.type, point.offersId)],
       destination: this.#destination,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
@@ -40,10 +44,10 @@ export default class WaypointPresenter {
     this.#waypointEditComponent = new FormEdit({
       waypoint: this.#waypoint,
       offersType: this.#offersType,
-      offers: [...this.#waypointModel.getOffersById(point.type, point.offersId)],
+      offers: [...this.#offersModel.getOffersById(point.type, point.offersId)],
       destination: this.#destination,
-      destinationAll: this.#waypointModel.destinations,
-      offersAll: [...this.#waypointModel.offers],
+      destinationAll: this.#destinationModel.destinations,
+      offersAll: [...this.#offersModel.offers],
       onFormSubmit: this.#handleFormSubmit,
     });
 

@@ -14,6 +14,8 @@ export default class TripPresenter {
   #headerContainer;
   #mainContainer;
   #waypointModel;
+  #offersModel;
+  #destinationModel;
   #sorting;
   #buttonNewEvent = new ButtonNewEvent();
   #tripInfo = new TripInfo();
@@ -23,11 +25,25 @@ export default class TripPresenter {
   #currentSortType = SortType.DAY;
   #sortingState = generateSorting(this.#currentSortType);
 
-  constructor({ headerContainer, mainContainer, waypointModel }) {
+  constructor({ headerContainer, mainContainer, waypointModel, offersModel, destinationModel }) {
     this.#headerContainer = headerContainer;
     this.#mainContainer = mainContainer;
     this.#waypointModel = waypointModel;
+    this.#offersModel = offersModel;
+    this.#destinationModel = destinationModel;
     this.#waypointListComponent = new WaypointListView();
+  }
+
+  get waypoints() {
+    return this.#waypointModel.waypoints;
+  }
+
+  get offers() {
+    return this.#offersModel.offers;
+  }
+
+  get destinations() {
+    return this.#destinationModel.destinations;
   }
 
   init() {
@@ -40,6 +56,8 @@ export default class TripPresenter {
     const waypointPresenter = new WaypointPresenter({
       waypointListComponent: this.#waypointListComponent,
       waypointModel: this.#waypointModel,
+      offersModel: this.#offersModel,
+      destinationModel: this.#destinationModel,
       onDataChange: this.#handleWaypointChange,
       onModeChange: this.#handleModeChange,
     });
