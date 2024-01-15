@@ -129,9 +129,8 @@ function createDestinationTemplate(destination) {
     </section>`);
 }
 
-function createFormEditTemplate(_state, offers, destinationAll) {
-  const { waypoint, offersType, destination } = _state;
-
+function createFormEditTemplate(state, offers, destinationAll) {
+  const { waypoint, offersType, destination } = state;
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -190,7 +189,6 @@ export default class FormEdit extends AbstractStatefulView {
     if (evt.isTrusted) {
       document.dispatchEvent(new KeyboardEvent('keydown', {
         key: 'Escape',
-        keyCode: 27,
       }));
     }
   };
@@ -212,6 +210,15 @@ export default class FormEdit extends AbstractStatefulView {
 
   #destinationToggleHandler = (evt) => {
     const name = evt.target.value;
+    const destinationNames = [];
+    this.#destinationAll.forEach((element) => {
+      destinationNames.push(element.name);
+    });
+
+    if (!destinationNames.includes(name)) {
+      evt.target.value = '';
+      return '';
+    }
     if (name) {
       this.updateElement({
         destination: this.#destinationAll.find((item) => item.name === name),
