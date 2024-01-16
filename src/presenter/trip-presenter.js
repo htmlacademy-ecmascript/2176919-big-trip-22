@@ -8,8 +8,8 @@ import { generateFilter } from '../utils/filter.js';
 import { generateSorting } from '../utils/sort.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
-import { updateItem, sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration } from '../utils/utilities.js';
-import { SortType } from '../utils/constants.js';
+import { sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration } from '../utils/utilities.js';
+import { SortType, UpdateType, UserAction } from '../utils/constants.js';
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
@@ -20,7 +20,6 @@ export default class TripPresenter {
   #buttonNewEvent = new ButtonNewEvent();
   #tripInfo = new TripInfo();
   #waypointListComponent;
-  #waypoints = [];
   #waypointPresenters = new Map();
   #currentSortType = SortType.DAY;
   #sortingState = generateSorting(this.#currentSortType);
@@ -29,13 +28,22 @@ export default class TripPresenter {
     this.#headerContainer = headerContainer;
     this.#mainContainer = mainContainer;
     this.#waypointModel = waypointModel;
+    this.#waypointModel.addObserver(this.#handleModelEvent);
     this.#offersModel = offersModel;
     this.#destinationModel = destinationModel;
     this.#waypointListComponent = new WaypointListView();
   }
 
   get waypoints() {
-    return this.#waypointModel.waypoints;
+    switch (this.#currentSortType) {
+      case SortType.DAY:
+        return [...this.#waypointModel.waypoints].sort(sortWaypointByDate);
+      case SortType.TIME:
+        return [...this.#waypointModel.waypoints].sort(sortWaypointByDuration);
+      case SortType.PRICE:
+        return [...this.#waypointModel.waypoints].sort(sortWaypointByPrice);
+    }
+    return [...this.#waypointModel.waypoints].sort(sortWaypointByDate);
   }
 
   get offers() {
@@ -47,7 +55,6 @@ export default class TripPresenter {
   }
 
   init() {
-    this.#waypoints = [...this.#waypointModel.waypoints].sort(sortWaypointByDate);
     this.#renderApp();
     render(this.#waypointListComponent, this.#mainContainer);
   }
@@ -58,7 +65,7 @@ export default class TripPresenter {
       waypointModel: this.#waypointModel,
       offersModel: this.#offersModel,
       destinationModel: this.#destinationModel,
-      onDataChange: this.#handleWaypointChange,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
     });
     waypointPresenter.init(point);
@@ -71,8 +78,10 @@ export default class TripPresenter {
   }
 
   #renderWaypointList() {
-    for (let i = 0; i < this.#waypoints.length; i++) {
-      this.#renderWaypoint(this.#waypoints[i]);
+    const waypointCount = this.waypoints.length;
+    const waypoints = this.waypoints.slice(0, waypointCount);
+    for (let i = 0; i < waypointCount; i++) {
+      this.#renderWaypoint(waypoints[i]);
     }
   }
 
@@ -80,13 +89,48 @@ export default class TripPresenter {
     this.#waypointPresenters.forEach((presenter) => presenter.resetView());
   };
 
-  #handleWaypointChange = (updatedWaypoint) => {
-    this.#waypoints = updateItem(this.#waypoints, updatedWaypoint);
-    this.#waypointPresenters.get(updatedWaypoint.id).init(updatedWaypoint);
+  #handleViewAction = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+    switch (actionType) {
+      case UserAction.UPDATE_WAYPOINT:
+        this.#waypointModel.updateWaypoint(updateType, update);
+        break;
+      case UserAction.ADD_WAYPOINT:
+        this.#waypointModel.addWaypoint(updateType, update);
+        break;
+      case UserAction.DELETE_TASK:
+        this.#waypointModel.deleteWaypoint(updateType, update);
+        break;
+    }
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список
+    // - обновить всю доску (например, при переключении фильтра)
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this.#waypointPresenters.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
+        this.#clearWaypointList();
+        this.#renderWaypointList();
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
   };
 
   #renderFilters() {
-    const filters = generateFilter(this.#waypoints);
+    const filters = generateFilter(this.waypoints);
     render(new Filters({ filters }), this.#headerContainer);
   }
 
@@ -102,28 +146,12 @@ export default class TripPresenter {
     render(new NoEvent(), this.#mainContainer);
   }
 
-  #sortWaypoints(sortType) {
-    switch (sortType) {
-      case SortType.DAY:
-        this.#waypoints.sort(sortWaypointByDate);
-        break;
-      case SortType.TIME:
-        this.#waypoints.sort(sortWaypointByDuration);
-        break;
-      case SortType.PRICE:
-        this.#waypoints.sort(sortWaypointByPrice);
-        break;
-      default:
-        this.#waypoints.sort(sortWaypointByDate);
-    }
-    this.#currentSortType = sortType;
-  }
-
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
       return;
     }
-    this.#sortWaypoints(sortType);
+
+    this.#currentSortType = sortType;
     this.#clearWaypointList();
     this.#renderWaypointList();
   };
@@ -141,7 +169,7 @@ export default class TripPresenter {
     this.#renderFilters();
     this.#renderButtonNewEvent();
     this.#renderTripInfo();
-    if (this.#waypoints.length === 0) {
+    if (this.waypoints.length === 0) {
       this.#renderNoEvent();
       return;
     }

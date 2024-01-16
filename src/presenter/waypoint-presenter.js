@@ -1,7 +1,7 @@
 import { render, replace, remove } from '../framework/render.js';
 import Waypoint from '../view/waypoint.js';
 import FormEdit from '../view/form-edit.js';
-import { Mode } from '../utils/constants.js';
+import { Mode, UserAction, UpdateType } from '../utils/constants.js';
 export default class WaypointPresenter {
   #waypointListComponent = null;
   #waypointModel = null;
@@ -104,11 +104,17 @@ export default class WaypointPresenter {
   };
 
   #handleFavoriteClick = () => {
-    this.#handleDataChange({ ...this.#waypoint, isFavorite: !this.#waypoint.isFavorite });
+    this.#handleDataChange(
+      UserAction.UPDATE_WAYPOINT,
+      UpdateType.MINOR,
+      { ...this.#waypoint, isFavorite: !this.#waypoint.isFavorite });
   };
 
   #handleFormSubmit = (point) => {
-    this.#handleDataChange(point);
+    this.#handleDataChange(
+      UserAction.UPDATE_WAYPOINT,
+      UpdateType.MINOR,
+      point,);
     this.#replaceFormToPoint();
   };
 }

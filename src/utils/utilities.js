@@ -72,4 +72,4 @@ function sortWaypointByPrice(waypointA, waypointB) {
   return 0;
 }
 
-export { humanizeDueDate, getDuration, filter, updateItem, sortWaypointByDate, sortWaypointByDuration, sortWaypointByPrice };
+export { humanizeDueDate, getDuration, filter, sortWaypointByDate, sortWaypointByDuration, sortWaypointByPrice };
