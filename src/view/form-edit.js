@@ -269,6 +269,8 @@ export default class FormEdit extends AbstractStatefulView {
       this.element.querySelector('[name="event-start-time"]'),
       {
         dateFormat: 'd/m/y h:i',
+        enableTime: true,
+        'time_24hr': true,
         defaultDate: this._state.waypoint.dateFrom,
         onChange: this.#dateFromChangeHandler,
       },
@@ -280,6 +282,8 @@ export default class FormEdit extends AbstractStatefulView {
       this.element.querySelector('[name="event-end-time"]'),
       {
         dateFormat: 'd/m/y h:i',
+        enableTime: true,
+        'time_24hr': true,
         defaultDate: this._state.waypoint.dateTo,
         onChange: this.#dateToChangeHandler,
         minDate: this._state.waypoint.dateFrom,

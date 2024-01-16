@@ -4,7 +4,7 @@ import FormEdit from '../view/form-edit.js';
 import { Mode } from '../utils/constants.js';
 export default class WaypointPresenter {
   #waypointListComponent = null;
-  #waypointModel = null;
+  //  #waypointModel = null;
   #offersModel = null;
   #destinationModel = null;
   #waypointComponent = null;
@@ -18,7 +18,7 @@ export default class WaypointPresenter {
 
   constructor({ waypointListComponent, waypointModel, offersModel, destinationModel, onDataChange, onModeChange }) {
     this.#waypointListComponent = waypointListComponent;
-    this.#waypointModel = waypointModel;
+    //    this.#waypointModel = waypointModel;
     this.#offersModel = offersModel;
     this.#destinationModel = destinationModel;
     this.#handleDataChange = onDataChange;
