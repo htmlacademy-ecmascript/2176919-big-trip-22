@@ -24,17 +24,25 @@ const FilterType = {
   PRESENT: 'present',
   FUTURE: 'future',
 };
-
 const Mode = {
   DEFAULT: 'DEFAULT',
   EDITING: 'EDITING',
 };
-
 const SORTING = ['day', 'event', 'time', 'price', 'offers'];
 const SortType = {
   DAY: 'day',
   TIME: 'time',
   PRICE: 'price',
 };
+const UserAction = {
+  UPDATE_TASK: 'UPDATE_WAYPOINT',
+  ADD_TASK: 'ADD_WAYPOINT',
+  DELETE_TASK: 'DELETE_WAYPOINT',
+};
+const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
 
-export { DateFormat, CLASS_NAME, TextNoEvent, FilterType, Mode, SORTING, SortType };
+export { DateFormat, CLASS_NAME, TextNoEvent, FilterType, Mode, SORTING, SortType, UserAction, UpdateType };
