@@ -1,4 +1,4 @@
-import { render, RenderPosition } from '../framework/render.js';
+import { render, remove, RenderPosition } from '../framework/render.js';
 import Filters from '../view/filters.js';
 import Sorting from '../view/sorting.js';
 import ButtonNewEvent from '../view/button-new-event.js';
@@ -72,14 +72,23 @@ export default class TripPresenter {
     this.#waypointPresenters.set(point.id, waypointPresenter);
   }
 
-  #clearWaypointList() {
+  #clearWaypointList(resetSortType = false) {
     this.#waypointPresenters.forEach((presenter) => presenter.destroy());
     this.#waypointPresenters.clear();
+    remove(this.#sorting);
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   }
 
   #renderWaypointList() {
     const waypointCount = this.waypoints.length;
     const waypoints = this.waypoints.slice(0, waypointCount);
+    if (waypointCount === 0) {
+      this.#renderNoEvent();
+      return;
+    }
+    this.#renderSort();
     for (let i = 0; i < waypointCount; i++) {
       this.#renderWaypoint(waypoints[i]);
     }
@@ -125,6 +134,8 @@ export default class TripPresenter {
         break;
       case UpdateType.MAJOR:
         // - обновить всю доску (например, при переключении фильтра)
+        this.#clearWaypointList({ resetSortType: true });
+        this.#renderWaypointList();
         break;
     }
   };
@@ -157,12 +168,14 @@ export default class TripPresenter {
   };
 
   #renderSort() {
+    this.#sortingState = generateSorting(this.#currentSortType);
     this.#sorting = new Sorting({
+      currentSortType: this.#currentSortType,
       onSortTypeChange: this.#handleSortTypeChange,
       sorting: this.#sortingState,
     });
 
-    render(this.#sorting, this.#mainContainer);
+    render(this.#sorting, this.#mainContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderApp() {
@@ -173,7 +186,6 @@ export default class TripPresenter {
       this.#renderNoEvent();
       return;
     }
-    this.#renderSort();
     this.#renderWaypointList();
   }
 }

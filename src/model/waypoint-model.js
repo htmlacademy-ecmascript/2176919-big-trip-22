@@ -1,7 +1,7 @@
 import Observable from '../framework/observable.js';
 import { getRandomWaypoint } from '../mock/waypoints.js';
 
-const WAYPOINT_COUNT = 7;
+const WAYPOINT_COUNT = 3;
 
 export default class WaypointModel extends Observable {
   /**
