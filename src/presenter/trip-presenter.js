@@ -7,7 +7,7 @@ import { generateSorting } from '../utils/sort.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
 import { sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration, filter } from '../utils/utilities.js';
-import { SortType, UpdateType, UserAction } from '../utils/constants.js';
+import { SortType, UpdateType, UserAction, FilterType } from '../utils/constants.js';
 import FilterPresenter from './filter-presenter.js';
 export default class TripPresenter {
   #headerContainer;
@@ -20,9 +20,11 @@ export default class TripPresenter {
   #buttonNewEvent = new ButtonNewEvent();
   #tripInfo = new TripInfo();
   #waypointListComponent;
+  #noEventComponent;
   #waypointPresenters = new Map();
   #currentSortType = SortType.DAY;
   #sortingState = generateSorting(this.#currentSortType);
+  #filterType = FilterType.EVERYTHING;
 
   constructor({ headerContainer, mainContainer, waypointModel, offersModel, destinationModel, filterModel }) {
     this.#headerContainer = headerContainer;
@@ -38,9 +40,9 @@ export default class TripPresenter {
   }
 
   get waypoints() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const waypoints = this.#waypointModel.waypoints;
-    const filteredWaypoints = filter[filterType](waypoints);
+    const filteredWaypoints = filter[this.#filterType](waypoints);
 
     switch (this.#currentSortType) {
       case SortType.DAY:
@@ -82,7 +84,13 @@ export default class TripPresenter {
   #clearWaypointList(resetSortType = false) {
     this.#waypointPresenters.forEach((presenter) => presenter.destroy());
     this.#waypointPresenters.clear();
+
     remove(this.#sorting);
+
+    if (this.#noEventComponent) {
+      remove(this.#noEventComponent);
+    }
+
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
     }
@@ -114,7 +122,7 @@ export default class TripPresenter {
       case UserAction.ADD_WAYPOINT:
         this.#waypointModel.addWaypoint(updateType, update);
         break;
-      case UserAction.DELETE_TASK:
+      case UserAction.DELETE_WAYPOINT:
         this.#waypointModel.deleteWaypoint(updateType, update);
         break;
     }
@@ -127,7 +135,7 @@ export default class TripPresenter {
         this.#waypointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        this.#clearWaypointList();
+        this.#clearWaypointList({ resetSortType: true });
         this.#renderWaypointList();
         break;
       case UpdateType.MAJOR:
@@ -155,7 +163,8 @@ export default class TripPresenter {
   }
 
   #renderNoEvent() {
-    render(new NoEvent(), this.#mainContainer);
+    this.#noEventComponent = new NoEvent({ filterType: this.#filterType });
+    render(this.#noEventComponent, this.#mainContainer);
   }
 
   #handleSortTypeChange = (sortType) => {

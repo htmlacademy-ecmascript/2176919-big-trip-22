@@ -1,7 +1,7 @@
 import Observable from '../framework/observable.js';
 import { getRandomWaypoint } from '../mock/waypoints.js';
 
-const WAYPOINT_COUNT = 3;
+const WAYPOINT_COUNT = 7;
 
 export default class WaypointModel extends Observable {
   /**
@@ -43,7 +43,6 @@ export default class WaypointModel extends Observable {
 
   deleteWaypoint(updateType, update) {
     const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
-
     if (index === -1) {
       throw new Error('Can\'t delete unexisting waypoint');
     }

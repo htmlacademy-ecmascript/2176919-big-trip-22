@@ -297,7 +297,7 @@ export default class FormEdit extends AbstractStatefulView {
 
   #waypointDeleteClickHandler = (evt) => {
     evt.preventDefault();
-    this.#handleDeleteClick(FormEdit.retrievesValuesStateToPoint(this._state));
+    this.#handleDeleteClick(FormEdit.retrievesValuesStateToPoint(this._state.waypoint));
   };
 
   static addsValuesPointToState(waypoint, offersType, destination) {
