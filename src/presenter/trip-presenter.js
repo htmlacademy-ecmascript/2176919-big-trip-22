@@ -100,10 +100,6 @@ export default class TripPresenter {
 
   #handleViewAction = (actionType, updateType, update) => {
     console.log(actionType, updateType, update);
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
     switch (actionType) {
       case UserAction.UPDATE_WAYPOINT:
         this.#waypointModel.updateWaypoint(updateType, update);
@@ -119,13 +115,8 @@ export default class TripPresenter {
 
   #handleModelEvent = (updateType, data) => {
     console.log(updateType, data);
-    // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список
-    // - обновить всю доску (например, при переключении фильтра)
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this.#waypointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
@@ -133,7 +124,6 @@ export default class TripPresenter {
         this.#renderWaypointList();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
         this.#clearWaypointList({ resetSortType: true });
         this.#renderWaypointList();
         break;

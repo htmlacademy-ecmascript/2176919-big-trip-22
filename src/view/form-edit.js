@@ -159,14 +159,17 @@ export default class FormEdit extends AbstractStatefulView {
   #handleFormSubmit;
   #datepickerStart;
   #datepickerEnd;
+  #handleDeleteClick;
 
-  constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit }) {
+  constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit, onDeleteClick }) {
     super();
     this._setState(FormEdit.addsValuesPointToState(waypoint, offersType, destination));
     this.#offers = offers;
     this.#destinationAll = destinationAll;
     this.#offersAll = offersAll;
     this.#handleFormSubmit = onFormSubmit;
+    this.#handleDeleteClick = onDeleteClick;
+
     this._restoreHandlers();
   }
 
@@ -199,6 +202,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.element.querySelector('.event__save-btn').addEventListener('click', (evt) => evt.preventDefault());
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationToggleHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#waypointDeleteClickHandler);
 
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
@@ -290,6 +294,11 @@ export default class FormEdit extends AbstractStatefulView {
       },
     );
   }
+
+  #waypointDeleteClickHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleDeleteClick(FormEdit.retrievesValuesStateToPoint(this._state));
+  };
 
   static addsValuesPointToState(waypoint, offersType, destination) {
     return {

@@ -47,6 +47,7 @@ export default class WaypointPresenter {
       destinationAll: this.#destinationModel.destinations,
       offersAll: [...this.#offersModel.offers],
       onFormSubmit: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     if (prevWaypointComponent === null || prevWaypointEditComponent === null) {
@@ -114,5 +115,13 @@ export default class WaypointPresenter {
       UpdateType.MINOR,
       point,);
     this.#replaceFormToPoint();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_WAYPOINT,
+      UpdateType.MINOR,
+      point,
+    );
   };
 }
