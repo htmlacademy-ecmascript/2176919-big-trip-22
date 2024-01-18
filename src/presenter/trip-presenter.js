@@ -1,5 +1,4 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
-import Filters from '../view/filters.js';
 import Sorting from '../view/sorting.js';
 import ButtonNewEvent from '../view/button-new-event.js';
 import NoEvent from '../view/no-event.js';
@@ -9,6 +8,7 @@ import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
 import { sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration } from '../utils/utilities.js';
 import { SortType, UpdateType, UserAction } from '../utils/constants.js';
+import FilterPresenter from './filter-presenter.js';
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
@@ -29,6 +29,7 @@ export default class TripPresenter {
     this.#mainContainer = mainContainer;
     this.#waypointModel = waypointModel;
     this.#waypointModel.addObserver(this.#handleModelEvent);
+    this.#filterModel = filterModel;
     this.#offersModel = offersModel;
     this.#destinationModel = destinationModel;
     this.#filterModel = filterModel;
@@ -132,13 +133,12 @@ export default class TripPresenter {
   };
 
   #renderFilters() {
-    const filters = [
-      {
-        type: 'everything',
-        count: 0,
-      },
-    ];
-    render(new Filters({ filters, currentFilterType: 'everything', onFilterTypeChange: () => { } }), this.#headerContainer);
+    const filterPresenter = new FilterPresenter({
+      filterContainer: this.#headerContainer,
+      filterModel: this.#filterModel,
+      waypointModel: this.#waypointModel,
+    });
+    filterPresenter.init();
   }
 
   #renderButtonNewEvent() {
