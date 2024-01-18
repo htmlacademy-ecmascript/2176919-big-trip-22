@@ -4,7 +4,6 @@ import Sorting from '../view/sorting.js';
 import ButtonNewEvent from '../view/button-new-event.js';
 import NoEvent from '../view/no-event.js';
 import TripInfo from '../view/trip-info.js';
-import { generateFilter } from '../utils/filter.js';
 import { generateSorting } from '../utils/sort.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
@@ -16,6 +15,7 @@ export default class TripPresenter {
   #waypointModel;
   #offersModel;
   #destinationModel;
+  #filterModel;
   #sorting;
   #buttonNewEvent = new ButtonNewEvent();
   #tripInfo = new TripInfo();
@@ -24,13 +24,14 @@ export default class TripPresenter {
   #currentSortType = SortType.DAY;
   #sortingState = generateSorting(this.#currentSortType);
 
-  constructor({ headerContainer, mainContainer, waypointModel, offersModel, destinationModel }) {
+  constructor({ headerContainer, mainContainer, waypointModel, offersModel, destinationModel, filterModel }) {
     this.#headerContainer = headerContainer;
     this.#mainContainer = mainContainer;
     this.#waypointModel = waypointModel;
     this.#waypointModel.addObserver(this.#handleModelEvent);
     this.#offersModel = offersModel;
     this.#destinationModel = destinationModel;
+    this.#filterModel = filterModel;
     this.#waypointListComponent = new WaypointListView();
   }
 
@@ -131,8 +132,13 @@ export default class TripPresenter {
   };
 
   #renderFilters() {
-    const filters = generateFilter(this.waypoints);
-    render(new Filters({ filters }), this.#headerContainer);
+    const filters = [
+      {
+        type: 'everything',
+        count: 0,
+      },
+    ];
+    render(new Filters({ filters, currentFilterType: 'everything', onFilterTypeChange: () => { } }), this.#headerContainer);
   }
 
   #renderButtonNewEvent() {

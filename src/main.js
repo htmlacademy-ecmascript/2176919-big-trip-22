@@ -11,5 +11,5 @@ const offersModel = new OffersModel();
 const destinationModel = new DestinationModel();
 const filterModel = new FilterModel();
 
-const presenter = new TripPresenter({ headerContainer: siteFiltersElement, mainContainer: siteMainElement, waypointModel, offersModel, destinationModel });
+const presenter = new TripPresenter({ headerContainer: siteFiltersElement, mainContainer: siteMainElement, waypointModel, offersModel, destinationModel, filterModel });
 presenter.init();
