@@ -6,7 +6,7 @@ import TripInfo from '../view/trip-info.js';
 import { generateSorting } from '../utils/sort.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
-import { sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration } from '../utils/utilities.js';
+import { sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration, filter } from '../utils/utilities.js';
 import { SortType, UpdateType, UserAction } from '../utils/constants.js';
 import FilterPresenter from './filter-presenter.js';
 export default class TripPresenter {
@@ -28,8 +28,9 @@ export default class TripPresenter {
     this.#headerContainer = headerContainer;
     this.#mainContainer = mainContainer;
     this.#waypointModel = waypointModel;
-    this.#waypointModel.addObserver(this.#handleModelEvent);
     this.#filterModel = filterModel;
+    this.#waypointModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
     this.#offersModel = offersModel;
     this.#destinationModel = destinationModel;
     this.#filterModel = filterModel;
@@ -37,15 +38,19 @@ export default class TripPresenter {
   }
 
   get waypoints() {
+    const filterType = this.#filterModel.filter;
+    const waypoints = this.#waypointModel.waypoints;
+    const filteredWaypoints = filter[filterType](waypoints);
+
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return [...this.#waypointModel.waypoints].sort(sortWaypointByDate);
+        return filteredWaypoints.sort(sortWaypointByDate);
       case SortType.TIME:
-        return [...this.#waypointModel.waypoints].sort(sortWaypointByDuration);
+        return filteredWaypoints.sort(sortWaypointByDuration);
       case SortType.PRICE:
-        return [...this.#waypointModel.waypoints].sort(sortWaypointByPrice);
+        return filteredWaypoints.sort(sortWaypointByPrice);
     }
-    return [...this.#waypointModel.waypoints].sort(sortWaypointByDate);
+    return filteredWaypoints.sort(sortWaypointByDate);
   }
 
   get offers() {

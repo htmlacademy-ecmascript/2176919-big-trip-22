@@ -35,10 +35,6 @@ const filter = {
   [FilterType.FUTURE]: (points) => points.filter((point) => checksTravelIsAfter(point.dateFrom)),
 };
 
-function updateItem(items, update) {
-  return items.map((item) => item.id === update.id ? update : item);
-}
-
 function sortWaypointByDate(waypointA, waypointB) {
   if (waypointA.dateFrom > waypointB.dateFrom) {
     return 1;
