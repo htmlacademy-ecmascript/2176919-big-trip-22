@@ -199,7 +199,7 @@ export default class FormEdit extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#exitsWithoutSaving);
-    this.element.querySelector('.event__save-btn').addEventListener('click', (evt) => evt.preventDefault());
+    this.element.querySelector('.event__save-btn').addEventListener('click', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationToggleHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#waypointDeleteClickHandler);
@@ -219,7 +219,8 @@ export default class FormEdit extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit(FormEdit.retrievesValuesStateToPoint(this._state));
+    console.log(this._state)
+    this.#handleFormSubmit(FormEdit.retrievesValuesStateToPoint(this._state.waypoint));
   };
 
   #typeToggleHandler = (evt) => {
@@ -246,6 +247,12 @@ export default class FormEdit extends AbstractStatefulView {
     if (name) {
       this.updateElement({
         destination: this.#destinationAll.find((item) => item.name === name),
+      });
+      this.updateElement({
+        waypoint: {
+          ...this._state.waypoint,
+          destination: this._state.destination.id,
+        },
       });
     }
   };
