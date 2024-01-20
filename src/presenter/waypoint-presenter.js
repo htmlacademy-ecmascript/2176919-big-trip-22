@@ -48,6 +48,7 @@ export default class WaypointPresenter {
       offersAll: [...this.#offersModel.offers],
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
+      isEditMode: false,
     });
 
     if (prevWaypointComponent === null || prevWaypointEditComponent === null) {

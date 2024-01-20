@@ -1,14 +1,15 @@
-import { render, remove, RenderPosition } from '../framework/render.js';
+import FilterPresenter from './filter-presenter.js';
+import NewEventPresenter from './new-event-presenter.js';
 import Sorting from '../view/sorting.js';
-import ButtonNewEvent from '../view/button-new-event.js';
 import NoEvent from '../view/no-event.js';
 import TripInfo from '../view/trip-info.js';
-import { generateSorting } from '../utils/sort.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
+import { generateSorting } from '../utils/sort.js';
+import { render, remove, RenderPosition } from '../framework/render.js';
 import { sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration, filter } from '../utils/utilities.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../utils/constants.js';
-import FilterPresenter from './filter-presenter.js';
+
 export default class TripPresenter {
   #headerContainer;
   #mainContainer;
@@ -17,7 +18,6 @@ export default class TripPresenter {
   #destinationModel;
   #filterModel;
   #sorting;
-  #buttonNewEvent = new ButtonNewEvent();
   #tripInfo = new TripInfo();
   #waypointListComponent;
   #noEventComponent;
@@ -25,8 +25,9 @@ export default class TripPresenter {
   #currentSortType = SortType.DAY;
   #sortingState = generateSorting(this.#currentSortType);
   #filterType = FilterType.EVERYTHING;
+  #newEventPresenter;
 
-  constructor({ headerContainer, mainContainer, waypointModel, offersModel, destinationModel, filterModel }) {
+  constructor({ headerContainer, mainContainer, waypointModel, offersModel, destinationModel, filterModel, onNewEventDestroy }) {
     this.#headerContainer = headerContainer;
     this.#mainContainer = mainContainer;
     this.#waypointModel = waypointModel;
@@ -37,6 +38,14 @@ export default class TripPresenter {
     this.#destinationModel = destinationModel;
     this.#filterModel = filterModel;
     this.#waypointListComponent = new WaypointListView();
+
+    this.#newEventPresenter = new NewEventPresenter({
+      destinations: this.#destinationModel,
+      offers: this.#offersModel,
+      pointListContainer: this.#waypointListComponent,
+      onDataChange: this.#handleViewAction,
+      onDestroy: onNewEventDestroy,
+    });
   }
 
   get waypoints() {
@@ -54,6 +63,7 @@ export default class TripPresenter {
     }
     return filteredWaypoints.sort(sortWaypointByDate);
   }
+  //проверить нужны ли
 
   get offers() {
     return this.#offersModel.offers;
@@ -81,7 +91,14 @@ export default class TripPresenter {
     this.#waypointPresenters.set(point.id, waypointPresenter);
   }
 
+  createNewWaypoint() {
+    this.#currentSortType = SortType.DAY;
+    this.#filterType = FilterType.EVERYTHING;
+    this.#newEventPresenter.init();
+  }
+
   #clearWaypointList(resetSortType = false) {
+    this.#newEventPresenter.destroy();
     this.#waypointPresenters.forEach((presenter) => presenter.destroy());
     this.#waypointPresenters.clear();
 
@@ -110,6 +127,7 @@ export default class TripPresenter {
   }
 
   #handleModeChange = () => {
+    this.#newEventPresenter.destroy();
     this.#waypointPresenters.forEach((presenter) => presenter.resetView());
   };
 
@@ -153,10 +171,10 @@ export default class TripPresenter {
     });
     filterPresenter.init();
   }
-
-  #renderButtonNewEvent() {
-    render(this.#buttonNewEvent, this.#headerContainer, RenderPosition.AFTEREND);
-  }
+  /*
+    #renderButtonNewEvent() {
+      render(this.#buttonNewEvent, this.#headerContainer, RenderPosition.AFTEREND);
+    } */
 
   #renderTripInfo() {
     render(this.#tripInfo, this.#headerContainer, RenderPosition.BEFOREBEGIN);
@@ -190,7 +208,7 @@ export default class TripPresenter {
 
   #renderApp() {
     this.#renderFilters();
-    this.#renderButtonNewEvent();
+    //this.#renderButtonNewEvent();
     this.#renderTripInfo();
     if (this.waypoints.length === 0) {
       this.#renderNoEvent();

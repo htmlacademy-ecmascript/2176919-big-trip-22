@@ -31,7 +31,7 @@ function createTypeTemplate(waypoint, destination, destinationAll) {
       <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${namePoint}" list="destination-list-${id}">
+      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${namePoint}" list="destination-list-${id}" placeholder=" Куда отправимся?">
       <datalist id="destination-list-${id}">
       ${destinationAll.map(({ name: nameDestination }) => `<option value="${nameDestination}"></option>`).join('')}
       </datalist>
@@ -105,13 +105,13 @@ function createOffersTemplate(offers, offersType) {
 
 function createPhotosTemplate(destination) {
   const { photos } = destination;
-  if (photos.length === 0) {
+  if (photos?.length === 0) {
     return '';
   }
   return (`
     <div class="event__photos-container">
       <div class="event__photos-tape">
-      ${photos.map(({ description: descriptionPhoto, src }) => `
+      ${photos?.map(({ description: descriptionPhoto, src }) => `
       <img class="event__photo" src="${src}" alt="${descriptionPhoto}">`).join('')}
       </div>
     </div>`
@@ -120,7 +120,7 @@ function createPhotosTemplate(destination) {
 
 function createDestinationTemplate(destination) {
   const { description, photos } = destination;
-  if (description.length === 0 && photos.length === 0) {
+  if (description?.length === 0 && photos?.length === 0) {
     return '';
   }
   return (`
@@ -133,6 +133,7 @@ function createDestinationTemplate(destination) {
 
 function createFormEditTemplate(state, offers, destinationAll) {
   const { waypoint, offersType, destination } = state;
+
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -160,8 +161,9 @@ export default class FormEdit extends AbstractStatefulView {
   #datepickerStart;
   #datepickerEnd;
   #handleDeleteClick;
+  #isEditMode;
 
-  constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit, onDeleteClick }) {
+  constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit, onDeleteClick, isEditMode }) {
     super();
     this._setState(FormEdit.addsValuesPointToState(waypoint, offersType, destination));
     this.#offers = offers;
@@ -169,12 +171,13 @@ export default class FormEdit extends AbstractStatefulView {
     this.#offersAll = offersAll;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleDeleteClick = onDeleteClick;
+    this.#isEditMode = isEditMode;
 
     this._restoreHandlers();
   }
 
   get template() {
-    return createFormEditTemplate(this._state, this.#offers, this.#destinationAll, this.#offersAll);
+    return createFormEditTemplate(this._state, this.#offers, this.#destinationAll, this.#offersAll, this.#isEditMode);
   }
 
   removeElement() {
