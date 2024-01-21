@@ -222,7 +222,6 @@ export default class FormEdit extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    console.log(this._state)
     this.#handleFormSubmit(FormEdit.retrievesValuesStateToPoint(this._state.waypoint));
   };
 

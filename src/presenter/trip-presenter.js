@@ -132,7 +132,6 @@ export default class TripPresenter {
   };
 
   #handleViewAction = (actionType, updateType, update) => {
-    console.log(actionType, updateType, update);
     switch (actionType) {
       case UserAction.UPDATE_WAYPOINT:
         this.#waypointModel.updateWaypoint(updateType, update);
@@ -147,7 +146,6 @@ export default class TripPresenter {
   };
 
   #handleModelEvent = (updateType, data) => {
-    console.log(updateType, data);
     switch (updateType) {
       case UpdateType.PATCH:
         this.#waypointPresenters.get(data.id).init(data);
