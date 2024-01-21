@@ -39,8 +39,6 @@ export default class NewEventPresenter {
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
       isEditMode: true,
-
-      pointOffers: this.#offersModel.offers,
     });
 
     render(this.#FormComponent, this.#pointListContainer.element, RenderPosition.AFTERBEGIN);

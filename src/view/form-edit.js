@@ -58,7 +58,7 @@ function createPriceTemplate(waypoint) {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-${id}" type="number" name="event-price" value="${basePrice}">
+      <input class="event__input  event__input--price" id="event-price-${id}" type="number" min="0" step="1" oninput="if(value.charAt(0) === '0' || value.charAt(0) === '-' || value.includes('.')) value = ''" name="event-price" value="${basePrice}">
     </div>`);
 }
 
@@ -66,8 +66,8 @@ function createSaveButton() {
   return ('<button class="event__save-btn  btn  btn--blue" type="submit">Save</button>');
 }
 
-function createResetButton() {
-  return ('<button class="event__reset-btn" type="reset">Delete</button>');
+function createResetButton(isEditMode) {
+  return (`<button class="event__reset-btn" type="reset">${isEditMode ? 'Cancel' : 'Delete'}</button>`);
 }
 
 function createRollupButton() {
@@ -131,9 +131,8 @@ function createDestinationTemplate(destination) {
     </section>`);
 }
 
-function createFormEditTemplate(state, offers, destinationAll) {
+function createFormEditTemplate(state, offers, destinationAll, isEditMode) {
   const { waypoint, offersType, destination } = state;
-
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -142,7 +141,7 @@ function createFormEditTemplate(state, offers, destinationAll) {
         ${createDateTemplate(waypoint)}
         ${createPriceTemplate(waypoint)}
         ${createSaveButton()}
-        ${createResetButton()}
+        ${createResetButton(isEditMode)}
         ${createRollupButton()}
       </header>
       <section class="event__details">
@@ -177,7 +176,7 @@ export default class FormEdit extends AbstractStatefulView {
   }
 
   get template() {
-    return createFormEditTemplate(this._state, this.#offers, this.#destinationAll, this.#offersAll, this.#isEditMode);
+    return createFormEditTemplate(this._state, this.#offers, this.#destinationAll, this.#isEditMode);
   }
 
   removeElement() {
@@ -206,6 +205,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationToggleHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#waypointDeleteClickHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#basePriceToggleHandler);
 
     this.#setDatepickerStart();
     this.#setDatepickerEnd();
@@ -260,11 +260,20 @@ export default class FormEdit extends AbstractStatefulView {
     }
   };
 
+  #basePriceToggleHandler = (evt) => {
+    this.updateElement({
+      waypoint: {
+        ...this._state.waypoint,
+        basePrice: evt.target.value,
+      },
+    });
+  };
+
   #dateFromChangeHandler = ([userDate]) => {
     this.updateElement({
       waypoint: {
         ...this._state.waypoint,
-        dateFrom: userDate,
+        dateFrom: userDate.toISOString(),
       },
     });
   };
@@ -273,7 +282,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.updateElement({
       waypoint: {
         ...this._state.waypoint,
-        dateTo: userDate,
+        dateTo: userDate.toISOString(),
       },
     });
   };

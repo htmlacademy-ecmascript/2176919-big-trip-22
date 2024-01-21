@@ -6,6 +6,9 @@ const humanizeDueDate = (dueDate, format) => dueDate ? dayjs(dueDate).format(for
 
 const getDuration = (start, end) => {
   const duration = dayjs.duration(dayjs(end).diff(dayjs(start)));
+  if (duration.months()) {
+    return duration.format('MM[m] DD[d] HH[h] mm[m]');
+  }
   if (duration.days()) {
     return duration.format('DD[d] HH[h] mm[m]');
   }

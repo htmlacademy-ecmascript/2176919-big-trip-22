@@ -1,7 +1,6 @@
 import Observable from '../framework/observable.js';
 import { mockOptions } from '../mock/waypoints.js';
 
-
 export default class OffersModel extends Observable {
 
   /**
@@ -30,7 +29,7 @@ export default class OffersModel extends Observable {
    * @param {RandomWaypoint.offersId} itemsId
    * @returns {offer[]} offers
   */
-  getOffersById(type, itemsId) {
+  getOffersById(type, itemsId = ['']) {
     const offersType = this.getOffersByType(type);
     return offersType.offers.filter((item) => itemsId.find((id) => item.id === id));
   }
