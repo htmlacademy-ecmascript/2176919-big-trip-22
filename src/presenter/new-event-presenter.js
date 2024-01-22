@@ -8,28 +8,25 @@ export default class NewEventPresenter {
   #pointListContainer;
   #handleDataChange;
   #handleDestroy;
-
-  #point;
   #destinationModel;
   #offersModel;
 
-  #FormComponent = null;
+  #formComponent = null;
 
-  constructor({ pointListContainer, onDataChange, onDestroy, point, destinations, offers }) {
+  constructor({ pointListContainer, onDataChange, onDestroy, destinationModel, offersModel }) {
     this.#pointListContainer = pointListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
-    this.#point = point;
-    this.#destinationModel = destinations;
-    this.#offersModel = offers;
+    this.#destinationModel = destinationModel;
+    this.#offersModel = offersModel;
   }
 
   init() {
-    if (this.#FormComponent !== null) {
+    if (this.#formComponent !== null) {
       return;
     }
 
-    this.#FormComponent = new FormEdit({
+    this.#formComponent = new FormEdit({
       waypoint: { type: DEFAULT_TYPE, basePrice: 0 },
       offers: [],
       destination: { name: '', photos: [], description: '' },
@@ -38,23 +35,23 @@ export default class NewEventPresenter {
       offersAll: [...this.#offersModel.offers],
       onFormSubmit: this.#handleFormSubmit,
       onDeleteClick: this.#handleDeleteClick,
-      isEditMode: true,
+      isEditMode: false,
     });
 
-    render(this.#FormComponent, this.#pointListContainer.element, RenderPosition.AFTERBEGIN);
+    render(this.#formComponent, this.#pointListContainer.element, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   destroy() {
-    if (this.#FormComponent === null) {
+    if (this.#formComponent === null) {
       return;
     }
 
     this.#handleDestroy();
 
-    remove(this.#FormComponent);
-    this.#FormComponent = null;
+    remove(this.#formComponent);
+    this.#formComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }

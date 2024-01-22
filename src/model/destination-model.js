@@ -12,7 +12,7 @@ export default class DestinationModel extends Observable {
     * @returns {Destination[]}
     */
   get destinations() {
-    return structuredClone(this.#destination);
+    return this.#destination;
   }
 
   /**

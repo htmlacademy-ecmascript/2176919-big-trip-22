@@ -32,16 +32,17 @@ export default class TripPresenter {
     this.#mainContainer = mainContainer;
     this.#waypointModel = waypointModel;
     this.#filterModel = filterModel;
-    this.#waypointModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
     this.#offersModel = offersModel;
     this.#destinationModel = destinationModel;
     this.#filterModel = filterModel;
     this.#waypointListComponent = new WaypointListView();
 
+    this.#waypointModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
+
     this.#newEventPresenter = new NewEventPresenter({
-      destinations: this.#destinationModel,
-      offers: this.#offersModel,
+      destinationModel: this.#destinationModel,
+      offersModel: this.#offersModel,
       pointListContainer: this.#waypointListComponent,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewEventDestroy,
@@ -169,10 +170,6 @@ export default class TripPresenter {
     });
     filterPresenter.init();
   }
-  /*
-    #renderButtonNewEvent() {
-      render(this.#buttonNewEvent, this.#headerContainer, RenderPosition.AFTEREND);
-    } */
 
   #renderTripInfo() {
     render(this.#tripInfo, this.#headerContainer, RenderPosition.BEFOREBEGIN);
@@ -206,7 +203,6 @@ export default class TripPresenter {
 
   #renderApp() {
     this.#renderFilters();
-    //this.#renderButtonNewEvent();
     this.#renderTripInfo();
     if (this.waypoints.length === 0) {
       this.#renderNoEvent();

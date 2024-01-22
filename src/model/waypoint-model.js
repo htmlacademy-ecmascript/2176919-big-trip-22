@@ -13,7 +13,7 @@ export default class WaypointModel extends Observable {
     * @returns {RandomWaypoint[]}
     */
   get waypoints() {
-    return structuredClone(this.#waypoints);
+    return this.#waypoints;
   }
 
   updateWaypoint(updateType, update) {

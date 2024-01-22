@@ -25,8 +25,8 @@ const FilterType = {
   FUTURE: 'future',
 };
 const Mode = {
-  DEFAULT: 'DEFAULT',
-  EDITING: 'EDITING',
+  DEFAULT: 'Default',
+  EDITING: 'Editing',
 };
 const SORTING = ['day', 'event', 'time', 'price', 'offers'];
 const SortType = {
@@ -35,14 +35,14 @@ const SortType = {
   PRICE: 'price',
 };
 const UserAction = {
-  UPDATE_WAYPOINT: 'UPDATE_WAYPOINT',
-  ADD_WAYPOINT: 'ADD_WAYPOINT',
-  DELETE_WAYPOINT: 'DELETE_WAYPOINT',
+  UPDATE_WAYPOINT: 'UpdateWaypoint',
+  ADD_WAYPOINT: 'AddWaypoint',
+  DELETE_WAYPOINT: 'DeleteWaypoint',
 };
 const UpdateType = {
-  PATCH: 'PATCH',
-  MINOR: 'MINOR',
-  MAJOR: 'MAJOR',
+  PATCH: 'Patch',
+  MINOR: 'Minor',
+  MAJOR: 'Major',
 };
 const DEFAULT_TYPE = 'flight';
 

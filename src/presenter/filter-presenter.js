@@ -20,7 +20,7 @@ export default class FilterPresenter {
   }
 
   get filters() {
-    const waypoints = this.#waypointModel.waypoints;
+    const waypoints = [...this.#waypointModel.waypoints];
 
     return Object.values(FilterType).map((type) => ({
       type,

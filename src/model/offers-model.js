@@ -12,7 +12,7 @@ export default class OffersModel extends Observable {
     * @returns {AllOffers[]}
     */
   get offers() {
-    return structuredClone(this.#offers);
+    return this.#offers;
   }
 
   /**
