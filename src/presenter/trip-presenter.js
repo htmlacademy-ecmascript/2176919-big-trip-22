@@ -64,15 +64,6 @@ export default class TripPresenter {
     }
     return filteredWaypoints.sort(sortWaypointByDate);
   }
-  //проверить нужны ли
-
-  get offers() {
-    return this.#offersModel.offers;
-  }
-
-  get destinations() {
-    return this.#destinationModel.destinations;
-  }
 
   init() {
     this.#renderApp();
@@ -93,8 +84,9 @@ export default class TripPresenter {
   }
 
   createNewWaypoint() {
-    this.#currentSortType = SortType.DAY;
-    this.#filterType = FilterType.EVERYTHING;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#clearWaypointList({ resetSortType: true });
+    this.#renderWaypointList();
     this.#newEventPresenter.init();
   }
 
@@ -152,7 +144,7 @@ export default class TripPresenter {
         this.#waypointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
-        this.#clearWaypointList({ resetSortType: true });
+        this.#clearWaypointList();
         this.#renderWaypointList();
         break;
       case UpdateType.MAJOR:
