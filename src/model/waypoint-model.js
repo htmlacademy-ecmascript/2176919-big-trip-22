@@ -12,7 +12,7 @@ export default class WaypointModel extends Observable {
     this.#waypointsApiService = waypointsApiService;
 
     this.#waypointsApiService.waypoints.then((waypoints) => {
-      console.log(waypoints);
+      console.log(waypoints.map(this.#adaptToClient));
     });
   }
 
@@ -60,5 +60,24 @@ export default class WaypointModel extends Observable {
     ];
 
     this._notify(updateType);
+  }
+
+  #adaptToClient(waypoint) {
+    const adaptedWaypoint = {
+      ...waypoint,
+      basePrice: waypoint['base_price'],
+      dateFrom: waypoint['date_from'],
+      dateTo: waypoint['date_to'],
+      isFavorite: waypoint['is_favorite'],
+      offersId: waypoint.offers,
+    };
+
+    delete adaptedWaypoint['base_price'];
+    delete adaptedWaypoint['date_from'];
+    delete adaptedWaypoint['date_to'];
+    delete adaptedWaypoint['is_favorite'];
+    delete adaptedWaypoint['offers'];
+
+    return adaptedWaypoint;
   }
 }
