@@ -34,7 +34,6 @@ export default class WaypointsApiService extends ApiService {
       offers: waypoint.offersId,
     };
 
-    // Ненужные ключи мы удаляем
     delete adaptedWaypoint.basePrice;
     delete adaptedWaypoint.dateFrom;
     delete adaptedWaypoint.dateTo;

@@ -37,3 +37,4 @@ function handleNewEventButtonClick() {
 render(newEventButtonComponent, siteFiltersElement, RenderPosition.AFTEREND);
 
 presenter.init();
+waypointModel.init();
