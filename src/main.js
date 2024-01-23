@@ -15,8 +15,12 @@ const siteMainElement = document.querySelector('.trip-events');
 const waypointModel = new WaypointModel({
   waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
 });
-const offersModel = new OffersModel();
-const destinationModel = new DestinationModel();
+const offersModel = new OffersModel({
+  waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
+});
+const destinationModel = new DestinationModel({
+  waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
+});
 const filterModel = new FilterModel();
 
 const presenter = new TripPresenter({ headerContainer: siteFiltersElement, mainContainer: siteMainElement, waypointModel, offersModel, destinationModel, filterModel, onNewEventDestroy: handleNewEventFormClose });
@@ -34,7 +38,10 @@ function handleNewEventButtonClick() {
   newEventButtonComponent.element.disabled = true;
 }
 
-render(newEventButtonComponent, siteFiltersElement, RenderPosition.AFTEREND);
+destinationModel.init();
+offersModel.init();
+waypointModel.init().finally(() => {
+  render(newEventButtonComponent, siteFiltersElement, RenderPosition.AFTEREND);
+});
 
 presenter.init();
-waypointModel.init();

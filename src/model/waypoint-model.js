@@ -7,10 +7,6 @@ export default class WaypointModel extends Observable {
   constructor({ waypointsApiService }) {
     super();
     this.#waypointsApiService = waypointsApiService;
-
-    /* this.#waypointsApiService.waypoints.then((waypoints) => {
-      console.log(waypoints.map(this.#adaptToClient));
-    }); */
   }
 
   /**
