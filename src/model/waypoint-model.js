@@ -4,10 +4,17 @@ import { getRandomWaypoint } from '../mock/waypoints.js';
 const WAYPOINT_COUNT = 7;
 
 export default class WaypointModel extends Observable {
-  /**
-    * @type {RandomWaypoint[]}
-    */
+  #waypointsApiService;
   #waypoints = Array.from({ length: WAYPOINT_COUNT }, getRandomWaypoint);
+
+  constructor({ waypointsApiService }) {
+    super();
+    this.#waypointsApiService = waypointsApiService;
+
+    this.#waypointsApiService.waypoints.then((waypoints) => {
+      console.log(waypoints);
+    });
+  }
 
   /**
     * @returns {RandomWaypoint[]}

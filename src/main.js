@@ -4,11 +4,17 @@ import OffersModel from './model/offers-model.js';
 import DestinationModel from './model/destination-model.js';
 import FilterModel from './model/filter-model.js';
 import ButtonNewEvent from './view/button-new-event.js';
+import WaypointsApiService from './waypoints-api-service.js';
 import { render, RenderPosition } from './framework/render.js';
+
+const AUTHORIZATION = 'Basic random8string';
+const END_POINT = 'https://22.objects.pages.academy/big-trip';
 
 const siteFiltersElement = document.querySelector('.trip-main__trip-controls');
 const siteMainElement = document.querySelector('.trip-events');
-const waypointModel = new WaypointModel();
+const waypointModel = new WaypointModel({
+  waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
+});
 const offersModel = new OffersModel();
 const destinationModel = new DestinationModel();
 const filterModel = new FilterModel();
