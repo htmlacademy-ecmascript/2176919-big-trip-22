@@ -29,7 +29,7 @@ export default class NewEventPresenter {
     this.#formComponent = new FormEdit({
       waypoint: { type: DEFAULT_TYPE, basePrice: 0 },
       offers: [],
-      destination: { name: '', photos: [], description: '' },
+      destination: { name: '', pictures: [], description: '' },
       offersType: this.#offersModel.getOffersByType(DEFAULT_TYPE),
       destinationAll: this.#destinationModel.destinations,
       offersAll: [...this.#offersModel.offers],

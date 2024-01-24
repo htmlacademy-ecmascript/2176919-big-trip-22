@@ -104,14 +104,14 @@ function createOffersTemplate(offers, offersType) {
 }
 
 function createPhotosTemplate(destination) {
-  const { photos } = destination;
-  if (photos?.length === 0) {
+  const { pictures } = destination;
+  if (pictures?.length === 0) {
     return '';
   }
   return (`
     <div class="event__photos-container">
       <div class="event__photos-tape">
-      ${photos?.map(({ description: descriptionPhoto, src }) => `
+      ${pictures?.map(({ description: descriptionPhoto, src }) => `
       <img class="event__photo" src="${src}" alt="${descriptionPhoto}">`).join('')}
       </div>
     </div>`
@@ -119,8 +119,8 @@ function createPhotosTemplate(destination) {
 }
 
 function createDestinationTemplate(destination) {
-  const { description, photos } = destination;
-  if (description?.length === 0 && photos?.length === 0) {
+  const { description, pictures } = destination;
+  if (description?.length === 0 && pictures?.length === 0) {
     return '';
   }
   return (`

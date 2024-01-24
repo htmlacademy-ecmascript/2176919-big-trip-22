@@ -38,9 +38,7 @@ function handleNewEventButtonClick() {
   newEventButtonComponent.element.disabled = true;
 }
 
-destinationModel.init();
-offersModel.init();
-waypointModel.init().finally(() => {
+destinationModel.init().then(() => offersModel.init()).then(() => waypointModel.init()).finally(() => {
   render(newEventButtonComponent, siteFiltersElement, RenderPosition.AFTEREND);
 });
 

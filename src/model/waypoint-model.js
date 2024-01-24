@@ -9,9 +9,6 @@ export default class WaypointModel extends Observable {
     this.#waypointsApiService = waypointsApiService;
   }
 
-  /**
-    * @returns {RandomWaypoint[]}
-    */
   get waypoints() {
     return this.#waypoints;
   }
@@ -27,20 +24,25 @@ export default class WaypointModel extends Observable {
     this._notify(UpdateType.INIT);
   }
 
-  updateWaypoint(updateType, update) {
+  async updateWaypoint(updateType, update) {
     const index = this.#waypoints.findIndex((waypoint) => waypoint.id === update.id);
 
     if (index === -1) {
       throw new Error('Can\'t update unexisting waypoint');
     }
 
-    this.#waypoints = [
-      ...this.#waypoints.slice(0, index),
-      update,
-      ...this.#waypoints.slice(index + 1),
-    ];
-
-    this._notify(updateType, update);
+    try {
+      const response = await this.#waypointsApiService.updateWaypoint(update);
+      const updateWaypoint = this.#adaptToClient(response);
+      this.#waypoints = [
+        ...this.#waypoints.slice(0, index),
+        update,
+        ...this.#waypoints.slice(index + 1),
+      ];
+      this._notify(updateType, updateWaypoint);
+    } catch (err) {
+      throw new Error('Can\'t update waypoint');
+    }
   }
 
   addWaypoint(updateType, update) {
