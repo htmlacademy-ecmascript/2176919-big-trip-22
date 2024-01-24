@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { remove, render, RenderPosition } from '../framework/render.js';
 import { UserAction, UpdateType, DEFAULT_TYPE } from '../utils/constants.js';
 import FormEdit from '../view/form-edit.js';
@@ -60,7 +59,7 @@ export default class NewEventPresenter {
     this.#handleDataChange(
       UserAction.ADD_WAYPOINT,
       UpdateType.MINOR,
-      { ...point, id: uuidv4() },
+      point,
     );
     this.destroy();
   };

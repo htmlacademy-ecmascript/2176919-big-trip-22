@@ -3,6 +3,8 @@ import ApiService from './framework/api-service';
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 export default class WaypointsApiService extends ApiService {
@@ -34,14 +36,36 @@ export default class WaypointsApiService extends ApiService {
     return parsedResponse;
   }
 
+  async addWaypoint(waypoint) {
+    const response = await this._load({
+      url: 'points',
+      method: Method.POST,
+      body: JSON.stringify(this.#adaptToServer(waypoint)),
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+
+    return parsedResponse;
+  }
+
+  async deleteWaypoint(waypoint) {
+    const response = await this._load({
+      url: `points/${waypoint.id}`,
+      method: Method.DELETE,
+    });
+
+    return response;
+  }
+
   #adaptToServer(waypoint) {
     const adaptedWaypoint = {
       ...waypoint,
-      'base_price': waypoint.basePrice,
+      'base_price': +waypoint.basePrice,
       'date_from': waypoint.dateFrom,
       'date_to': waypoint.dateTo,
-      'is_favorite': waypoint.isFavorite,
-      offers: waypoint.offersId,
+      'is_favorite': waypoint.isFavorite || false,
+      offers: waypoint.offersId || [],
     };
 
     delete adaptedWaypoint.basePrice;

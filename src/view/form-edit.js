@@ -31,7 +31,7 @@ function createTypeTemplate(waypoint, destination, destinationAll) {
       <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${namePoint}" list="destination-list-${id}" placeholder=" Куда отправимся?" required>
+      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${namePoint}" list="destination-list-${id}" placeholder=" Where will you go?" required>
       <datalist id="destination-list-${id}">
       ${destinationAll.map(({ name: nameDestination }) => `<option value="${nameDestination}"></option>`).join('')}
       </datalist>
@@ -58,7 +58,7 @@ function createPriceTemplate(waypoint) {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-${id}" type="number" min="1" step="1" oninput="if(value.charAt(0) === '0' || value.charAt(0) === '-' || value.includes('.')) value = ''" name="event-price" value="${basePrice}" required>
+      <input class="event__input  event__input--price" id="event-price-${id}" type="number" min="1" max="100000" step="1" oninput="if(value.charAt(0) === '0' || value.charAt(0) === '-' || value.includes('.')) value = ''" name="event-price" value="${basePrice}" required>
     </div>`);
 }
 
@@ -224,7 +224,7 @@ export default class FormEdit extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     const { destination, basePrice, dateFrom, dateTo } = this._state.waypoint;
-    if (destination && basePrice && dateFrom && dateTo) {
+    if (destination && basePrice && dateFrom && dateTo && basePrice < 100000) {
       this.#handleFormSubmit(FormEdit.retrievesValuesStateToPoint(this._state.waypoint));
     }
   };
@@ -303,12 +303,14 @@ export default class FormEdit extends AbstractStatefulView {
   };
 
   #dateToChangeHandler = ([userDate]) => {
-    this.updateElement({
-      waypoint: {
-        ...this._state.waypoint,
-        dateTo: userDate.toISOString(),
-      },
-    });
+    if (userDate.toISOString() > this._state.waypoint.dateFrom) {
+      this.updateElement({
+        waypoint: {
+          ...this._state.waypoint,
+          dateTo: userDate.toISOString(),
+        },
+      });
+    }
   };
 
   #setDatepickerStart() {
