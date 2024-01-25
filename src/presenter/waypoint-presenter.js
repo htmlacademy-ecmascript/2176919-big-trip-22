@@ -105,6 +105,23 @@ export default class WaypointPresenter {
     }
   }
 
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#waypointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#waypointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#waypointEditComponent.shake(resetFormState);
+  }
+
   #replacePointToForm() {
     replace(this.#waypointEditComponent, this.#waypointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
