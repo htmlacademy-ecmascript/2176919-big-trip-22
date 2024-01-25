@@ -66,7 +66,7 @@ function createSaveButton(isDisabled, isSaving) {
 }
 
 function createResetButton(isEditMode, isDisabled, isDeleting) {
-  return (`<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isEditMode ? `${isDeleting ? 'Deleting...' : 'Delete'}` : `${isDeleting ? 'Canseling...' : 'Cansel'}`}</button>`);
+  return (`<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isEditMode ? `${isDeleting ? 'Deleting...' : 'Delete'}` : 'Cansel'}</button>`);
 }
 
 function createRollupButton(isDisabled) {
@@ -130,8 +130,8 @@ function createDestinationTemplate(destination) {
     </section>`);
 }
 
-function createFormEditTemplate(state, offers, destinationAll, isEditMode, isDisabled, isSaving, isDeleting) {
-  const { waypoint, offersType, destination } = state;
+function createFormEditTemplate(state, offers, destinationAll, isEditMode) {
+  const { waypoint, offersType, destination, isDisabled, isSaving, isDeleting } = state;
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
