@@ -211,6 +211,7 @@ export default class TripPresenter {
       tripInfoContainer: this.#headerContainer,
       waypointModel: this.#waypointModel,
       destinationModel: this.#destinationModel,
+      offersModel: this.#offersModel,
     });
     tripInfoPresenter.init();
   }

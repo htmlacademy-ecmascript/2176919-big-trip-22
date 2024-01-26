@@ -5,15 +5,18 @@ export default class TripInfoPresenter {
   #tripInfoContainer;
   #waypointModel;
   #destinationModel;
+  #offersModel;
   #tripInfoComponent = null;
 
-  constructor({ tripInfoContainer, waypointModel, destinationModel }) {
+  constructor({ tripInfoContainer, waypointModel, destinationModel, offersModel }) {
     this.#tripInfoContainer = tripInfoContainer;
     this.#waypointModel = waypointModel;
     this.#destinationModel = destinationModel;
+    this.#offersModel = offersModel;
 
     this.#waypointModel.addObserver(this.#handleModelEvent);
     this.#destinationModel.addObserver(this.#handleModelEvent);
+    this.#offersModel.addObserver(this.#handleModelEvent);
   }
 
   get dateFrom() {
@@ -38,12 +41,26 @@ export default class TripInfoPresenter {
     return destinationNames;
   }
 
+  get totalCost() {
+    const points = this.#waypointModel.waypoints;
+    const totalBasePrice = points.map((item) => item.basePrice).reduce((acc, number) => acc + number, 0);
+    const allOffersWaypoints = points.map((item) => this.#offersModel.getOffersById(item.type, item.offersId));
+    const allOffersWaypointsPrice = [];
+    allOffersWaypoints.map((item) => {
+      if (item !== null) {
+        item.map((innerItem) => allOffersWaypointsPrice.push(innerItem.price));
+      }
+    });
+    return allOffersWaypointsPrice.reduce((acc, number) => acc + number, 0) + totalBasePrice;
+  }
+
   init() {
     const prevTripInfoComponents = this.#tripInfoComponent;
     const dateFrom = this.dateFrom;
     const dateTo = this.dateTo;
     const destinationNames = this.destinationNames;
-    this.#tripInfoComponent = new TripInfo({ dateFrom, dateTo, destinationNames });
+    const totalCost = this.totalCost;
+    this.#tripInfoComponent = new TripInfo({ dateFrom, dateTo, destinationNames, totalCost });
 
     if (prevTripInfoComponents === null) {
       render(this.#tripInfoComponent, this.#tripInfoContainer, RenderPosition.BEFOREBEGIN);
