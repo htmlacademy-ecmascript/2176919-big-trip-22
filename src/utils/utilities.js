@@ -80,4 +80,12 @@ function sortWaypointByPrice(waypointA, waypointB) {
   return 0;
 }
 
-export { humanizeDueDate, getDuration, filter, sortWaypointByDate, sortWaypointByDuration, sortWaypointByPrice };
+function formatNames(items) {
+  items = structuredClone(items);
+  if (items.length > 3) {
+    items.splice(1, items.length - 2, '...');
+  }
+  return items.join(' — ');
+}
+
+export { humanizeDueDate, getDuration, filter, sortWaypointByDate, sortWaypointByDuration, sortWaypointByPrice, formatNames };

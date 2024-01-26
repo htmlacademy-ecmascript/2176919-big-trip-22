@@ -2,7 +2,7 @@ import FilterPresenter from './filter-presenter.js';
 import NewEventPresenter from './new-event-presenter.js';
 import Sorting from '../view/sorting.js';
 import NoEvent from '../view/no-event.js';
-import TripInfo from '../view/trip-info.js';
+import TripInfoPresenter from './trip-info-presenter.js';
 import WaypointPresenter from './waypoint-presenter.js';
 import WaypointListView from '../view/waypoint-list-view.js';
 import Loading from '../view/loading.js';
@@ -24,7 +24,6 @@ export default class TripPresenter {
   #destinationModel;
   #filterModel;
   #sorting;
-  #tripInfo = new TripInfo();
   #loadingComponent = new Loading();
   #waypointListComponent;
   #noEventComponent;
@@ -208,7 +207,12 @@ export default class TripPresenter {
   }
 
   #renderTripInfo() {
-    render(this.#tripInfo, this.#headerContainer, RenderPosition.BEFOREBEGIN);
+    const tripInfoPresenter = new TripInfoPresenter({
+      tripInfoContainer: this.#headerContainer,
+      waypointModel: this.#waypointModel,
+      destinationModel: this.#destinationModel,
+    });
+    tripInfoPresenter.init();
   }
 
   #renderNoEvent() {
@@ -239,7 +243,7 @@ export default class TripPresenter {
 
   #renderApp() {
     this.#renderFilters();
-    this.#renderTripInfo();
     this.#renderWaypointList();
+    this.#renderTripInfo();
   }
 }
