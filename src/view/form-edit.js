@@ -132,7 +132,6 @@ function createDestinationTemplate(destination) {
 
 function createFormEditTemplate(state, destinationAll, isEditMode) {
   const { waypoint, offersType, destination, isDisabled, isSaving, isDeleting, offers } = state;
-  console.log(state)
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
