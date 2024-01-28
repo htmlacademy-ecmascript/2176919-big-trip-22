@@ -257,25 +257,18 @@ export default class FormEdit extends AbstractStatefulView {
   };
 
   #destinationToggleHandler = (evt) => {
-    const name = evt.target.value;
-    const destinationNames = [];
-    this.#destinationAll.forEach((element) => {
-      destinationNames.push(element.name);
-    });
-
-    if (!destinationNames.includes(name)) {
-      evt.target.value = '';
-      return '';
+    if (evt.target.value === '') {
+      return;
     }
-    if (name) {
-      this.updateElement({
-        destination: this.#destinationAll.find((item) => item.name === name),
-      });
+
+    const selectedDestination = this.#destinationAll.find((destination) => destination.name === evt.target.value);
+    if (selectedDestination) {
       this.updateElement({
         waypoint: {
           ...this._state.waypoint,
-          destination: this._state.destination.id,
+          destination: selectedDestination.id,
         },
+        destination: selectedDestination,
       });
     }
   };
