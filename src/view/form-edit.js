@@ -66,7 +66,7 @@ function createSaveButton(isDisabled, isSaving) {
 }
 
 function createResetButton(isEditMode, isDisabled, isDeleting) {
-  return (`<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isEditMode ? `${isDeleting ? 'Deleting...' : 'Delete'}` : 'Cansel'}</button>`);
+  return (`<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isEditMode ? `${isDeleting ? 'Deleting...' : 'Delete'}` : 'Cancel'}</button>`);
 }
 
 function createRollupButton(isDisabled) {
@@ -318,7 +318,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.#datepickerStart = flatpickr(
       this.element.querySelector('[name="event-start-time"]'),
       {
-        dateFormat: 'd/m/y h:i',
+        dateFormat: 'd/m/y H:i',
         enableTime: true,
         'time_24hr': true,
         defaultDate: this._state.waypoint.dateFrom,
@@ -331,7 +331,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.#datepickerStart = flatpickr(
       this.element.querySelector('[name="event-end-time"]'),
       {
-        dateFormat: 'd/m/y h:i',
+        dateFormat: 'd/m/y H:i',
         enableTime: true,
         'time_24hr': true,
         defaultDate: this._state.waypoint.dateTo,
