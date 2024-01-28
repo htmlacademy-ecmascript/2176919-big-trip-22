@@ -12,15 +12,11 @@ const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const siteFiltersElement = document.querySelector('.trip-main__trip-controls');
 const siteMainElement = document.querySelector('.trip-events');
-const waypointModel = new WaypointModel({
-  waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
-});
-const offersModel = new OffersModel({
-  waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
-});
-const destinationModel = new DestinationModel({
-  waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
-});
+const waypointsApiService = new WaypointsApiService(END_POINT, AUTHORIZATION);
+
+const waypointModel = new WaypointModel({ waypointsApiService: waypointsApiService });
+const offersModel = new OffersModel({ waypointsApiService: waypointsApiService });
+const destinationModel = new DestinationModel({ waypointsApiService: waypointsApiService });
 const filterModel = new FilterModel();
 
 const presenter = new TripPresenter({ headerContainer: siteFiltersElement, mainContainer: siteMainElement, waypointModel, offersModel, destinationModel, filterModel, onNewEventDestroy: handleNewEventFormClose });
@@ -38,8 +34,10 @@ function handleNewEventButtonClick() {
   newEventButtonComponent.element.disabled = true;
 }
 
-destinationModel.init().then(() => offersModel.init()).then(() => waypointModel.init()).finally(() => {
-  render(newEventButtonComponent, siteFiltersElement, RenderPosition.AFTEREND);
-});
+Promise.all([destinationModel.init(), offersModel.init()])
+  .then(() => waypointModel.init())
+  .finally(() => {
+    render(newEventButtonComponent, siteFiltersElement, RenderPosition.AFTEREND);
+  });
 
 presenter.init();

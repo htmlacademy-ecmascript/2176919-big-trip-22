@@ -163,7 +163,7 @@ export default class TripPresenter {
       case UserAction.DELETE_WAYPOINT:
         this.#waypointPresenters.get(update.id).setDeleting();
         try {
-          this.#waypointModel.deleteWaypoint(updateType, update);
+          await this.#waypointModel.deleteWaypoint(updateType, update);
         } catch (err) {
           this.#waypointPresenters.get(update.id).setAborting();
         }

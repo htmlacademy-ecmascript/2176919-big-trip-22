@@ -36,7 +36,7 @@ export default class WaypointModel extends Observable {
       const updateWaypoint = this.#adaptToClient(response);
       this.#waypoints = [
         ...this.#waypoints.slice(0, index),
-        update,
+        updateWaypoint,
         ...this.#waypoints.slice(index + 1),
       ];
       this._notify(updateType, updateWaypoint);
@@ -64,10 +64,7 @@ export default class WaypointModel extends Observable {
 
     try {
       await this.#waypointsApiService.deleteWaypoint(update);
-      this.#waypoints = [
-        ...this.#waypoints.slice(0, index),
-        ...this.#waypoints.slice(index + 1),
-      ];
+      this.#waypoints = this.#waypoints.filter((point) => point.id !== update.id);
 
       this._notify(updateType);
     } catch (err) {
