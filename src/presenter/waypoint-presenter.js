@@ -11,6 +11,7 @@ export default class WaypointPresenter {
   #waypoint = null;
   #offersType = null;
   #destination = null;
+  #offers = null;
   #handleDataChange = null;
   #handleModeChange = null;
   #mode = Mode.DEFAULT;
@@ -27,13 +28,14 @@ export default class WaypointPresenter {
     this.#waypoint = point;
     this.#offersType = this.#offersModel.getOffersByType(point.type);
     this.#destination = this.#destinationModel.getDestinationsById(point.destination);
+    this.#offers = [...this.#offersModel.getOffersById(point.type, point.offersId)];
 
     const prevWaypointComponent = this.#waypointComponent;
     const prevWaypointEditComponent = this.#waypointEditComponent;
 
     this.#waypointComponent = new Waypoint({
       waypoint: this.#waypoint,
-      offers: [...this.#offersModel.getOffersById(point.type, point.offersId)],
+      offers: this.#offers,
       destination: this.#destination,
       onEditClick: this.#handleEditClick,
       onFavoriteClick: this.#handleFavoriteClick,
@@ -42,7 +44,7 @@ export default class WaypointPresenter {
     this.#waypointEditComponent = new FormEdit({
       waypoint: this.#waypoint,
       offersType: this.#offersType,
-      offers: [...this.#offersModel.getOffersById(point.type, point.offersId)],
+      offers: this.#offers,
       destination: this.#destination,
       destinationAll: this.#destinationModel.destinations,
       offersAll: [...this.#offersModel.offers],
@@ -75,14 +77,14 @@ export default class WaypointPresenter {
   #escKeyDownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      this.#waypointEditComponent.reset(this.#waypoint, this.#offersType, this.#destination);
+      this.#waypointEditComponent.reset(this.#waypoint, this.#offersType, this.#destination, this.#offers);
       this.#replaceFormToPoint();
     }
   };
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
-      this.#waypointEditComponent.reset(this.#waypoint, this.#offersType, this.#destination);
+      this.#waypointEditComponent.reset(this.#waypoint, this.#offersType, this.#destination, this.#offers);
       this.#replaceFormToPoint();
     }
   }

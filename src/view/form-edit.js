@@ -130,8 +130,9 @@ function createDestinationTemplate(destination) {
     </section>`);
 }
 
-function createFormEditTemplate(state, offers, destinationAll, isEditMode) {
-  const { waypoint, offersType, destination, isDisabled, isSaving, isDeleting } = state;
+function createFormEditTemplate(state, destinationAll, isEditMode) {
+  const { waypoint, offersType, destination, isDisabled, isSaving, isDeleting, offers } = state;
+  console.log(state)
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -152,7 +153,6 @@ function createFormEditTemplate(state, offers, destinationAll, isEditMode) {
 }
 
 export default class FormEdit extends AbstractStatefulView {
-  #offers;
   #destinationAll;
   #offersAll;
   #handleFormSubmit;
@@ -163,8 +163,7 @@ export default class FormEdit extends AbstractStatefulView {
 
   constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit, onDeleteClick, isEditMode }) {
     super();
-    this._setState(FormEdit.addsValuesPointToState(waypoint, offersType, destination));
-    this.#offers = offers;
+    this._setState(FormEdit.addsValuesPointToState(waypoint, offersType, destination, offers));
     this.#destinationAll = destinationAll;
     this.#offersAll = offersAll;
     this.#handleFormSubmit = onFormSubmit;
@@ -175,7 +174,7 @@ export default class FormEdit extends AbstractStatefulView {
   }
 
   get template() {
-    return createFormEditTemplate(this._state, this.#offers, this.#destinationAll, this.#isEditMode);
+    return createFormEditTemplate(this._state, this.#destinationAll, this.#isEditMode, this.#offersAll);
   }
 
   removeElement() {
@@ -191,9 +190,9 @@ export default class FormEdit extends AbstractStatefulView {
     }
   }
 
-  reset(waypoint, offersType, destination) {
+  reset(waypoint, offersType, destination, offers) {
     this.updateElement(
-      FormEdit.addsValuesPointToState(waypoint, offersType, destination),
+      FormEdit.addsValuesPointToState(waypoint, offersType, destination, offers)
     );
   }
 
@@ -213,11 +212,9 @@ export default class FormEdit extends AbstractStatefulView {
 
   #exitsWithoutSaving = (evt) => {
     evt.preventDefault();
-    if (evt.isTrusted) {
-      document.dispatchEvent(new KeyboardEvent('keydown', {
-        key: 'Escape',
-      }));
-    }
+    document.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'Escape',
+    }));
   };
 
   #formSubmitHandler = (evt) => {
@@ -246,10 +243,8 @@ export default class FormEdit extends AbstractStatefulView {
     const newOffers = new Set(this._state.waypoint.offersId);
 
     if (isChecked) {
-      evt.target.setAttribute('checked', '');
       newOffers.add(offerId);
     } else {
-      evt.target.removeAttribute('checked');
       newOffers.delete(offerId);
     }
 
@@ -257,7 +252,8 @@ export default class FormEdit extends AbstractStatefulView {
       waypoint: {
         ...this._state.waypoint,
         offersId: Array.from(newOffers),
-      }
+      },
+      offers: this._state.offersType.offers.filter((item) => Array.from(newOffers).find((id) => item.id === id)),
     });
   };
 
@@ -346,7 +342,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.#handleDeleteClick(FormEdit.retrievesValuesStateToPoint(this._state.waypoint));
   };
 
-  static addsValuesPointToState(waypoint, offersType, destination) {
+  static addsValuesPointToState(waypoint, offersType, destination, offers) {
     return {
       waypoint: {
         ...waypoint,
@@ -356,6 +352,7 @@ export default class FormEdit extends AbstractStatefulView {
       },
       offersType: { ...offersType },
       destination: { ...destination },
+      offers: [...offers],
     };
   }
 

@@ -21,15 +21,15 @@ const getDuration = (start, end) => {
 };
 
 function checksTravelIsSame(dueDate) {
-  return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
+  return dueDate && dayjs(dueDate).isSame(dayjs());
 }
 
 function checksTravelIsBefore(dueDate) {
-  return dueDate && dayjs(dueDate).isBefore(dayjs(), 'D');
+  return dueDate && dayjs(dueDate).isBefore(dayjs());
 }
 
 function checksTravelIsAfter(dueDate) {
-  return dueDate && dayjs(dueDate).isAfter(dayjs(), 'D');
+  return dueDate && dayjs(dueDate).isAfter(dayjs());
 }
 
 const filter = {
