@@ -9,23 +9,15 @@ const MINUTES_COUNT = 60;
 
 const getDuration = (start, end) => {
   const duration = dayjs.duration(dayjs(end).diff(dayjs(start)));
-  if (duration.months()) {
-    const totalDays = duration.asDays();
-    const days = Math.floor(totalDays);
-    const hours = Math.floor((totalDays - days) * HOURS_COUNT);
-    const minutes = Math.floor(duration.asMinutes() - days * HOURS_COUNT * MINUTES_COUNT - hours * MINUTES_COUNT);
-    return `${days}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
+  const totalDays = duration.asDays();
+  const days = Math.floor(totalDays);
+  let hours = Math.floor((totalDays - days) * HOURS_COUNT);
+  let minutes = Math.floor(duration.asMinutes() - days * HOURS_COUNT * MINUTES_COUNT - hours * MINUTES_COUNT);
+  if (minutes === 60) {
+    hours++;
+    minutes = 0;
   }
-  if (duration.days()) {
-    const hours = Math.floor(duration.asHours());
-    const minutes = Math.floor(duration.asMinutes() - hours * MINUTES_COUNT);
-    return `${duration.days()}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
-  }
-  if (duration.hours()) {
-    return `${duration.hours().toString().padStart(2, '0')}H ${duration.minutes().toString().padStart(2, '0')}M`;
-  }
-
-  return `${duration.minutes().toString().padStart(2, '0')}M`;
+  return `${days.toString().padStart(2, '0')}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
 };
 
 function checksTravelIsSame(dueDate) {
