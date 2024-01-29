@@ -60,6 +60,9 @@ export default class TripInfoPresenter {
     const dateTo = this.dateTo;
     const destinationNames = this.destinationNames;
     const totalCost = this.totalCost;
+    if (totalCost === 0) {
+      return;
+    }
     this.#tripInfoComponent = new TripInfo({ dateFrom, dateTo, destinationNames, totalCost });
 
     if (prevTripInfoComponents === null) {

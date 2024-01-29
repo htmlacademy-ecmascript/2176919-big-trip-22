@@ -242,8 +242,10 @@ export default class FormEdit extends AbstractStatefulView {
     const newOffers = new Set(this._state.waypoint.offersId);
 
     if (isChecked) {
+      evt.target.setAttribute('checked', '');
       newOffers.add(offerId);
     } else {
+      evt.target.removeAttribute('checked');
       newOffers.delete(offerId);
     }
 
