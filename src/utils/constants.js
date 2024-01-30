@@ -44,8 +44,13 @@ const UpdateType = {
   MINOR: 'Minor',
   MAJOR: 'Major',
   INIT: 'Init',
+  ERROR: 'Error',
 };
 const DEFAULT_TYPE = 'flight';
 const TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const LoadingMessage = {
+  READY: 'Loading...',
+  ERROR: 'Failed to load latest route information',
+};
 
-export { DateFormat, CLASS_NAME, TextNoEvent, FilterType, Mode, SORTING, SortType, UserAction, UpdateType, DEFAULT_TYPE, TYPE };
+export { DateFormat, CLASS_NAME, TextNoEvent, FilterType, Mode, SORTING, SortType, UserAction, UpdateType, DEFAULT_TYPE, TYPE, LoadingMessage };

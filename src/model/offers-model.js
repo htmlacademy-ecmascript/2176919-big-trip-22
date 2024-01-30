@@ -22,6 +22,7 @@ export default class OffersModel extends Observable {
       this.#offers = await this.#waypointsApiService.offers;
     } catch (err) {
       this.#offers = [];
+      this._notify(UpdateType.ERROR);
     }
 
     this._notify(UpdateType.INIT);

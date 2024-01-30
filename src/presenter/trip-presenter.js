@@ -24,7 +24,7 @@ export default class TripPresenter {
   #destinationModel;
   #filterModel;
   #sorting;
-  #loadingComponent = new Loading();
+  #loadingComponent;
   #waypointListComponent;
   #noEventComponent;
   #waypointPresenters = new Map();
@@ -33,6 +33,7 @@ export default class TripPresenter {
   #filterType = FilterType.EVERYTHING;
   #newEventPresenter;
   #isLoading = true;
+  #isError = false;
   #uiBlocker = new UiBlocker({
     lowerLimit: TimeLimit.LOWER_LIMIT,
     upperLimit: TimeLimit.UPPER_LIMIT
@@ -120,7 +121,11 @@ export default class TripPresenter {
 
   #renderWaypointList() {
     if (this.#isLoading) {
-      this.#renderLoading();
+      this.#renderLoading({ isError: false });
+      return;
+    }
+    if (this.#isError) {
+      this.#renderLoading({ isError: true });
       return;
     }
     const waypointCount = this.waypoints.length;
@@ -190,6 +195,11 @@ export default class TripPresenter {
         remove(this.#loadingComponent);
         this.#renderWaypointList();
         break;
+      case UpdateType.ERROR:
+        this.#isError = true;
+        remove(this.#loadingComponent);
+        this.#renderWaypointList();
+        break;
     }
   };
 
@@ -202,7 +212,8 @@ export default class TripPresenter {
     filterPresenter.init();
   }
 
-  #renderLoading() {
+  #renderLoading(isError) {
+    this.#loadingComponent = new Loading(isError);
     render(this.#loadingComponent, this.#mainContainer);
   }
 
