@@ -2,7 +2,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeDueDate } from '../utils/utilities.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import { DateFormat, CLASS_NAME, TYPE } from '../utils/constants.js';
+import { DateFormat, TYPE } from '../utils/constants.js';
 
 function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
   const { type, id } = waypoint;
@@ -79,6 +79,7 @@ function createRollupButton(isDisabled) {
 
 function createOffersTemplate(offers, offersType, isDisabled) {
   const idPoints = offers.map((item) => item.id);
+
   if (offersType.offers.length !== 0) {
     return (`
       <section class="event__section  event__section--offers">
@@ -87,8 +88,8 @@ function createOffersTemplate(offers, offersType, isDisabled) {
         <div class="event__available-offers">
         ${offersType.offers.map(({ title: titleOffersType, id: idOfferType, price }) => `
         <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${CLASS_NAME[titleOffersType]}-${idOfferType}" type="checkbox" name="event-offer-${CLASS_NAME[titleOffersType]}" ${idPoints.includes(idOfferType) ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
-          <label class="event__offer-label" for="event-offer-${CLASS_NAME[titleOffersType]}-${idOfferType}">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${titleOffersType.split(' ').at(-1)}-${idOfferType}" type="checkbox" name="event-offer-${titleOffersType.split(' ').at(-1)}" ${idPoints.includes(idOfferType) ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
+          <label class="event__offer-label" for="event-offer-${titleOffersType.split(' ').at(-1)}-${idOfferType}">
             <span class="event__offer-title">${titleOffersType}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
@@ -202,7 +203,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationToggleHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#waypointDeleteClickHandler);
-    this.element.querySelector('.event__input--price').addEventListener('change', this.#basePriceToggleHandler);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#basePriceToggleHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offerClickHandler);
 
     this.#setDatepickerStart();

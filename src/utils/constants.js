@@ -4,14 +4,7 @@ const DateFormat = {
   YEAR: 'DD/MM/YY HH:mm',
   FULL_DATE: 'YYYY-MM-DD',
 };
-const CLASS_NAME = {
-  'Add luggage': 'luggage',
-  'Switch to comfort class': 'comfort',
-  'Add meal': 'meal',
-  'Choose seats': 'seats',
-  'Travel by train': 'train',
-  'Order Uber': 'uber',
-};
+
 const TextNoEvent = {
   EVERYTHING: 'Click New Event to create your first point',
   PAST: 'There are no past events now',
@@ -53,4 +46,4 @@ const LoadingMessage = {
   ERROR: 'Failed to load latest route information',
 };
 
-export { DateFormat, CLASS_NAME, TextNoEvent, FilterType, Mode, SORTING, SortType, UserAction, UpdateType, DEFAULT_TYPE, TYPE, LoadingMessage };
+export { DateFormat, TextNoEvent, FilterType, Mode, SORTING, SortType, UserAction, UpdateType, DEFAULT_TYPE, TYPE, LoadingMessage };
