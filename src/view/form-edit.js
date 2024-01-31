@@ -7,6 +7,9 @@ import { DateFormat, TYPE } from '../utils/constants.js';
 function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
   const { type, id } = waypoint;
   const { name: namePoint } = destination;
+  const cities = destinationAll.map((element) => element.name);
+  const pattern = cities.join('|');
+
   return (`
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
@@ -30,7 +33,7 @@ function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
       <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${namePoint}" list="destination-list-${id}" placeholder=" Where will you go?" required ${isDisabled ? 'disabled' : ''}>
+      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${namePoint}" list="destination-list-${id}" placeholder=" Where will you go?" ${isDisabled ? 'disabled' : ''} pattern="${pattern}" title="Choose from the suggested ones" required>
       <datalist id="destination-list-${id}">
       ${destinationAll.map(({ name: nameDestination }) => `<option value="${nameDestination}"></option>`).join('')}
       </datalist>
@@ -39,13 +42,14 @@ function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
 
 function createDateTemplate(waypoint, isDisabled) {
   const { dateFrom, dateTo, id } = waypoint;
+
   return (`
     <div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-${id}">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, DateFormat.YEAR)}" required ${isDisabled ? 'disabled' : ''}>
+      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, DateFormat.YEAR)}" ${isDisabled ? 'disabled' : ''} required>
       &mdash;
       <label class="visually-hidden" for="event-end-time-${id}">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, DateFormat.YEAR)}" required ${isDisabled ? 'disabled' : ''}>
+      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, DateFormat.YEAR)}" ${isDisabled ? 'disabled' : ''} required>
     </div>`);
 }
 
@@ -199,7 +203,7 @@ export default class FormEdit extends AbstractStatefulView {
   _restoreHandlers() {
     this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#exitsWithoutSaving);
-    this.element.querySelector('.event__save-btn').addEventListener('click', this.#formSubmitHandler);
+    this.element.querySelector('.event__save-btn').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationToggleHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#waypointDeleteClickHandler);
@@ -219,8 +223,9 @@ export default class FormEdit extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    const { destination, basePrice, dateFrom, dateTo } = this._state.waypoint;
-    if (destination && basePrice && dateFrom && dateTo && basePrice < 100000) {
+    const { dateFrom, dateTo } = this._state.waypoint;
+
+    if (dateFrom && dateTo) {
       this.#handleFormSubmit(FormEdit.retrievesValuesStateToPoint(this._state.waypoint));
     }
   };
