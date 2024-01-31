@@ -25,19 +25,26 @@ const newEventButtonComponent = new ButtonNewEvent({
   onClick: handleNewEventButtonClick
 });
 
+function handleNewEventButton(value) {
+  newEventButtonComponent.element.disabled = value;
+}
+
 function handleNewEventFormClose() {
-  newEventButtonComponent.element.disabled = false;
+  handleNewEventButton(false);
 }
 
 function handleNewEventButtonClick() {
   presenter.createNewWaypoint();
-  newEventButtonComponent.element.disabled = true;
+  handleNewEventButton(true);
 }
 
 Promise.all([destinationModel.init(), offersModel.init()])
   .then(() => waypointModel.init())
+  .then(handleNewEventButton(false))
   .finally(() => {
     render(newEventButtonComponent, siteFiltersElement, RenderPosition.AFTEREND);
   });
 
 presenter.init();
+
+export { handleNewEventButton };

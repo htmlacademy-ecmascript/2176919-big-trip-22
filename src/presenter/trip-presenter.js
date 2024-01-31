@@ -10,6 +10,7 @@ import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import { generateSorting } from '../utils/sort.js';
 import { render, remove, RenderPosition } from '../framework/render.js';
 import { sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration, filter } from '../utils/utilities.js';
+import { handleNewEventButton } from '../main.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../utils/constants.js';
 
 const TimeLimit = {
@@ -199,6 +200,7 @@ export default class TripPresenter {
         this.#isError = true;
         remove(this.#loadingComponent);
         this.#renderWaypointList();
+        handleNewEventButton(true);
         break;
     }
   };
