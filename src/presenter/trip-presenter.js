@@ -33,6 +33,7 @@ export default class TripPresenter {
   #sortingState = generateSorting(this.#currentSortType);
   #filterType = FilterType.EVERYTHING;
   #newEventPresenter;
+  #filterPresenter;
   #isLoading = true;
   #isError = false;
   #uiBlocker = new UiBlocker({
@@ -108,13 +109,15 @@ export default class TripPresenter {
     this.#waypointPresenters.forEach((presenter) => presenter.destroy());
     this.#waypointPresenters.clear();
 
-    remove(this.#sorting);
-    remove(this.#loadingComponent);
-
+    if (this.#sorting) {
+      remove(this.#sorting);
+    }
+    if (this.#loadingComponent) {
+      remove(this.#loadingComponent);
+    }
     if (this.#noEventComponent) {
       remove(this.#noEventComponent);
     }
-
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
     }
@@ -129,15 +132,17 @@ export default class TripPresenter {
       this.#renderLoading({ isError: true });
       return;
     }
-    const waypointCount = this.waypoints.length;
-    const waypoints = this.waypoints.slice(0, waypointCount);
-    if (waypointCount === 0) {
-      this.#renderNoEvent();
-      return;
-    }
-    this.#renderSort();
-    for (let i = 0; i < waypointCount; i++) {
-      this.#renderWaypoint(waypoints[i]);
+    if (!this.#isError) {
+      const waypointCount = this.waypoints.length;
+      const waypoints = this.waypoints.slice(0, waypointCount);
+      if (waypointCount === 0) {
+        this.#renderNoEvent();
+        return;
+      }
+      this.#renderSort();
+      for (let i = 0; i < waypointCount; i++) {
+        this.#renderWaypoint(waypoints[i]);
+      }
     }
   }
 
@@ -197,6 +202,7 @@ export default class TripPresenter {
         this.#renderWaypointList();
         break;
       case UpdateType.ERROR:
+        this.#isLoading = false;
         this.#isError = true;
         remove(this.#loadingComponent);
         this.#renderWaypointList();
@@ -206,12 +212,14 @@ export default class TripPresenter {
   };
 
   #renderFilters() {
-    const filterPresenter = new FilterPresenter({
-      filterContainer: this.#headerContainer,
-      filterModel: this.#filterModel,
-      waypointModel: this.#waypointModel,
-    });
-    filterPresenter.init();
+    if (!this.#filterPresenter) {
+      this.#filterPresenter = new FilterPresenter({
+        filterContainer: this.#headerContainer,
+        filterModel: this.#filterModel,
+        waypointModel: this.#waypointModel,
+      });
+      this.#filterPresenter.init();
+    }
   }
 
   #renderLoading(isError) {
