@@ -203,7 +203,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationToggleHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#waypointDeleteClickHandler);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#basePriceToggleHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#basePriceToggleHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offerClickHandler);
 
     this.#setDatepickerStart();
@@ -277,7 +277,7 @@ export default class FormEdit extends AbstractStatefulView {
   };
 
   #basePriceToggleHandler = (evt) => {
-    this.updateElement({
+    this._setState({
       waypoint: {
         ...this._state.waypoint,
         basePrice: evt.target.value,
