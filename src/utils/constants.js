@@ -13,9 +13,9 @@ const TextNoEvent = {
 };
 const FilterType = {
   EVERYTHING: 'everything',
-  PAST: 'past',
-  PRESENT: 'present',
   FUTURE: 'future',
+  PRESENT: 'present',
+  PAST: 'past',
 };
 const Mode = {
   DEFAULT: 'Default',
