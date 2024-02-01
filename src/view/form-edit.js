@@ -5,7 +5,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { DateFormat, TYPE } from '../utils/constants.js';
 
 function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
-  const { type, id } = waypoint;
+  const { type, id = 1 } = waypoint;
   const { name: namePoint } = destination;
   const cities = destinationAll.map((element) => element.name);
   const pattern = cities.join('|');
@@ -73,9 +73,9 @@ function createResetButton(isEditMode, isDisabled, isDeleting) {
   return (`<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isEditMode ? `${isDeleting ? 'Deleting...' : 'Delete'}` : 'Cancel'}</button>`);
 }
 
-function createRollupButton(isDisabled) {
+function createRollupButton() {
   return (`
-    <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
+    <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
     `);
@@ -146,7 +146,7 @@ function createFormEditTemplate(state, destinationAll, isEditMode) {
         ${createPriceTemplate(waypoint, isDisabled)}
         ${createSaveButton(isDisabled, isSaving)}
         ${createResetButton(isEditMode, isDisabled, isDeleting)}
-        ${createRollupButton(isDisabled)}
+        ${createRollupButton()}
       </header>
       <section class="event__details">
         ${createOffersTemplate(offers, offersType, isDisabled)}
