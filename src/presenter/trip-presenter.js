@@ -9,8 +9,7 @@ import Loading from '../view/loading.js';
 import UiBlocker from '../framework/ui-blocker/ui-blocker.js';
 import { generateSorting } from '../utils/sort.js';
 import { render, remove, RenderPosition } from '../framework/render.js';
-import { sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration, filter } from '../utils/utilities.js';
-import { handleNewEventButton } from '../main.js';
+import { sortWaypointByDate, sortWaypointByPrice, sortWaypointByDuration, filter, handleButtonDisabled } from '../utils/utilities.js';
 import { SortType, UpdateType, UserAction, FilterType } from '../utils/constants.js';
 
 const TimeLimit = {
@@ -34,6 +33,7 @@ export default class TripPresenter {
   #filterType = FilterType.EVERYTHING;
   #newEventPresenter;
   #filterPresenter;
+  #newEventButtonComponent;
   #isLoading = true;
   #isError = false;
   #uiBlocker = new UiBlocker({
@@ -41,7 +41,7 @@ export default class TripPresenter {
     upperLimit: TimeLimit.UPPER_LIMIT
   });
 
-  constructor({ headerContainer, mainContainer, waypointModel, offersModel, destinationModel, filterModel, onNewEventDestroy }) {
+  constructor({ headerContainer, mainContainer, waypointModel, offersModel, destinationModel, filterModel, newEventButtonComponent, onNewEventDestroy }) {
     this.#headerContainer = headerContainer;
     this.#mainContainer = mainContainer;
     this.#waypointModel = waypointModel;
@@ -49,6 +49,7 @@ export default class TripPresenter {
     this.#offersModel = offersModel;
     this.#destinationModel = destinationModel;
     this.#filterModel = filterModel;
+    this.#newEventButtonComponent = newEventButtonComponent;
     this.#waypointListComponent = new WaypointListView();
 
     this.#waypointModel.addObserver(this.#handleModelEvent);
@@ -206,7 +207,7 @@ export default class TripPresenter {
         this.#isError = true;
         remove(this.#loadingComponent);
         this.#renderWaypointList();
-        handleNewEventButton(true);
+        handleButtonDisabled(true, this.#newEventButtonComponent);
         break;
     }
   };

@@ -6,6 +6,7 @@ import FilterModel from './model/filter-model.js';
 import ButtonNewEvent from './view/button-new-event.js';
 import WaypointsApiService from './waypoints-api-service.js';
 import { render, RenderPosition } from './framework/render.js';
+import { handleButtonDisabled } from './utils/utilities.js';
 
 const AUTHORIZATION = 'Basic random8string';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
@@ -18,33 +19,26 @@ const waypointModel = new WaypointModel({ waypointsApiService: waypointsApiServi
 const offersModel = new OffersModel({ waypointsApiService: waypointsApiService });
 const destinationModel = new DestinationModel({ waypointsApiService: waypointsApiService });
 const filterModel = new FilterModel();
-
-const presenter = new TripPresenter({ headerContainer: siteFiltersElement, mainContainer: siteMainElement, waypointModel, offersModel, destinationModel, filterModel, onNewEventDestroy: handleNewEventFormClose });
-
 const newEventButtonComponent = new ButtonNewEvent({
   onClick: handleNewEventButtonClick
 });
 
-function handleNewEventButton(value) {
-  newEventButtonComponent.element.disabled = value;
-}
+const presenter = new TripPresenter({ headerContainer: siteFiltersElement, mainContainer: siteMainElement, waypointModel, offersModel, destinationModel, filterModel, newEventButtonComponent, onNewEventDestroy: handleNewEventFormClose });
 
 function handleNewEventFormClose() {
-  handleNewEventButton(false);
+  handleButtonDisabled(false, newEventButtonComponent);
 }
 
 function handleNewEventButtonClick() {
   presenter.createNewWaypoint();
-  handleNewEventButton(true);
+  handleButtonDisabled(true, newEventButtonComponent);
 }
 
 Promise.all([destinationModel.init(), offersModel.init()])
   .then(() => waypointModel.init())
-  .then(handleNewEventButton(false))
+  .then(handleButtonDisabled(false, newEventButtonComponent))
   .finally(() => {
     render(newEventButtonComponent, siteFiltersElement, RenderPosition.AFTEREND);
   });
 
 presenter.init();
-
-export { handleNewEventButton };

@@ -20,8 +20,17 @@ const getDuration = (start, end) => {
   return `${days.toString().padStart(2, '0')}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
 };
 
-function checksTravelIsSame(dueDate) {
-  return dueDate && dayjs(dueDate).isSame(dayjs());
+function checksTravelIsSame(point) {
+  const { dateFrom, dateTo } = point;
+  const currentDate = dayjs();
+
+  for (let date = dayjs(dateFrom); date <= dayjs(dateTo); date = date.add(1, 'day')) {
+    if (date.isSame(currentDate, 'day')) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function checksTravelIsBefore(dueDate) {
@@ -34,8 +43,8 @@ function checksTravelIsAfter(dueDate) {
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points,
-  [FilterType.PAST]: (points) => points.filter((point) => checksTravelIsBefore(point.dateFrom)),
-  [FilterType.PRESENT]: (points) => points.filter((point) => checksTravelIsSame(point.dateFrom)),
+  [FilterType.PAST]: (points) => points.filter((point) => checksTravelIsBefore(point.dateTo)),
+  [FilterType.PRESENT]: (points) => points.filter((point) => checksTravelIsSame(point)),
   [FilterType.FUTURE]: (points) => points.filter((point) => checksTravelIsAfter(point.dateFrom)),
 };
 
@@ -80,4 +89,8 @@ function formatNames(items) {
   return items.join(' — ');
 }
 
-export { humanizeDueDate, getDuration, filter, sortWaypointByDate, sortWaypointByDuration, sortWaypointByPrice, formatNames };
+function handleButtonDisabled(value, component) {
+  component.element.disabled = value;
+}
+
+export { humanizeDueDate, getDuration, filter, sortWaypointByDate, sortWaypointByDuration, sortWaypointByPrice, formatNames, handleButtonDisabled };
