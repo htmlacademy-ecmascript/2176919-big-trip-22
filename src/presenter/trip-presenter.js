@@ -147,6 +147,18 @@ export default class TripPresenter {
     }
   }
 
+  getPageUpdate(isOpen) {
+    if (this.#noEventComponent) {
+      remove(this.#noEventComponent);
+    }
+    if (!this.#isError && isOpen) {
+      const waypointCount = this.waypoints.length;
+      if (waypointCount === 0) {
+        this.#renderNoEvent();
+      }
+    }
+  }
+
   #handleModeChange = () => {
     this.#newEventPresenter.destroy();
     this.#waypointPresenters.forEach((presenter) => presenter.resetView());

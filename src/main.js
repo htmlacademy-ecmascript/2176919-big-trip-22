@@ -26,11 +26,13 @@ const newEventButtonComponent = new ButtonNewEvent({
 const presenter = new TripPresenter({ headerContainer: siteFiltersElement, mainContainer: siteMainElement, waypointModel, offersModel, destinationModel, filterModel, newEventButtonComponent, onNewEventDestroy: handleNewEventFormClose });
 
 function handleNewEventFormClose() {
+  presenter.getPageUpdate({ isOpen: false });
   handleButtonDisabled(false, newEventButtonComponent);
 }
 
 function handleNewEventButtonClick() {
   presenter.createNewWaypoint();
+  presenter.getPageUpdate();
   handleButtonDisabled(true, newEventButtonComponent);
 }
 
