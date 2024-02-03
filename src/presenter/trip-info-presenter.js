@@ -74,6 +74,15 @@ export default class TripInfoPresenter {
     remove(prevTripInfoComponents);
   }
 
+  destroy() {
+    if (this.#tripInfoComponent === null) {
+      return;
+    }
+
+    remove(this.#tripInfoComponent);
+    this.#tripInfoComponent = null;
+  }
+
   #handleModelEvent = () => {
     this.init();
   };

@@ -235,8 +235,10 @@ export default class FormEdit extends AbstractStatefulView {
       waypoint: {
         ...this._state.waypoint,
         type: evt.target.value,
+        offersId: [],
       },
       offersType: this.#offersAll.find((offer) => offer.type === evt.target.value),
+      offers: [],
     });
   };
 

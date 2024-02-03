@@ -27,6 +27,7 @@ export default class TripPresenter {
   #loadingComponent;
   #waypointListComponent;
   #noEventComponent;
+  #tripInfoPresenter;
   #waypointPresenters = new Map();
   #currentSortType = SortType.DAY;
   #sortingState = generateSorting(this.#currentSortType);
@@ -138,6 +139,7 @@ export default class TripPresenter {
       const waypoints = this.waypoints.slice(0, waypointCount);
       if (waypointCount === 0) {
         this.#renderNoEvent();
+        this.#tripInfoPresenter.destroy();
         return;
       }
       this.#renderSort();
@@ -155,6 +157,7 @@ export default class TripPresenter {
       const waypointCount = this.waypoints.length;
       if (waypointCount === 0) {
         this.#renderNoEvent();
+        this.#tripInfoPresenter.destroy();
       }
     }
   }
@@ -241,13 +244,13 @@ export default class TripPresenter {
   }
 
   #renderTripInfo() {
-    const tripInfoPresenter = new TripInfoPresenter({
+    this.#tripInfoPresenter = new TripInfoPresenter({
       tripInfoContainer: this.#headerContainer,
       waypointModel: this.#waypointModel,
       destinationModel: this.#destinationModel,
       offersModel: this.#offersModel,
     });
-    tripInfoPresenter.init();
+    this.#tripInfoPresenter.init();
   }
 
   #renderNoEvent() {
