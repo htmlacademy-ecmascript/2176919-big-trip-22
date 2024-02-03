@@ -1,5 +1,5 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { humanizeDueDate } from '../utils/utilities.js';
+import { humanizeDueDate } from '../utils/common.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { DateFormat, TYPE } from '../utils/constants.js';
