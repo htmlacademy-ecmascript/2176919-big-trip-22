@@ -9,41 +9,42 @@ const MINUTES_COUNT = 60;
 
 const getDuration = (start, end) => {
   const duration = dayjs.duration(dayjs(end).diff(dayjs(start)));
-  if (duration.months()) {
-    const totalDays = duration.asDays();
-    const days = Math.floor(totalDays);
-    const hours = Math.floor((totalDays - days) * HOURS_COUNT);
-    const minutes = Math.floor(duration.asMinutes() - days * HOURS_COUNT * MINUTES_COUNT - hours * MINUTES_COUNT);
-    return `${days}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
+  const totalDays = duration.asDays();
+  const days = Math.floor(totalDays);
+  let hours = Math.floor((totalDays - days) * HOURS_COUNT);
+  let minutes = Math.floor(duration.asMinutes() - days * HOURS_COUNT * MINUTES_COUNT - hours * MINUTES_COUNT);
+  if (minutes === 60) {
+    hours++;
+    minutes = 0;
   }
-  if (duration.days()) {
-    const hours = Math.floor(duration.asHours());
-    const minutes = Math.floor(duration.asMinutes() - hours * MINUTES_COUNT);
-    return `${duration.days()}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
-  }
-  if (duration.hours()) {
-    return `${duration.hours().toString().padStart(2, '0')}H ${duration.minutes().toString().padStart(2, '0')}M`;
-  }
-
-  return `${duration.minutes().toString().padStart(2, '0')}M`;
+  return `${days.toString().padStart(2, '0')}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
 };
 
-function checksTravelIsSame(dueDate) {
-  return dueDate && dayjs(dueDate).isSame(dayjs(), 'D');
+function checksTravelIsSame(point) {
+  const { dateFrom, dateTo } = point;
+  const currentDate = dayjs();
+
+  for (let date = dayjs(dateFrom); date <= dayjs(dateTo); date = date.add(1, 'day')) {
+    if (date.isSame(currentDate, 'day')) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 function checksTravelIsBefore(dueDate) {
-  return dueDate && dayjs(dueDate).isBefore(dayjs(), 'D');
+  return dueDate && dayjs(dueDate).isBefore(dayjs());
 }
 
 function checksTravelIsAfter(dueDate) {
-  return dueDate && dayjs(dueDate).isAfter(dayjs(), 'D');
+  return dueDate && dayjs(dueDate).isAfter(dayjs());
 }
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points,
-  [FilterType.PAST]: (points) => points.filter((point) => checksTravelIsBefore(point.dateFrom)),
-  [FilterType.PRESENT]: (points) => points.filter((point) => checksTravelIsSame(point.dateFrom)),
+  [FilterType.PAST]: (points) => points.filter((point) => checksTravelIsBefore(point.dateTo)),
+  [FilterType.PRESENT]: (points) => points.filter((point) => checksTravelIsSame(point)),
   [FilterType.FUTURE]: (points) => points.filter((point) => checksTravelIsAfter(point.dateFrom)),
 };
 
@@ -80,4 +81,16 @@ function sortWaypointByPrice(waypointA, waypointB) {
   return 0;
 }
 
-export { humanizeDueDate, getDuration, filter, sortWaypointByDate, sortWaypointByDuration, sortWaypointByPrice };
+function formatNames(items) {
+  items = structuredClone(items);
+  if (items.length > 3) {
+    items.splice(1, items.length - 2, '...');
+  }
+  return items.join(' — ');
+}
+
+function handleButtonDisabled(value, component) {
+  component.element.disabled = value;
+}
+
+export { humanizeDueDate, getDuration, filter, sortWaypointByDate, sortWaypointByDuration, sortWaypointByPrice, formatNames, handleButtonDisabled };

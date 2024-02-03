@@ -2,11 +2,14 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeDueDate } from '../utils/utilities.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import { DateFormat, CLASS_NAME, TYPE } from '../utils/constants.js';
+import { DateFormat, TYPE } from '../utils/constants.js';
 
 function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
-  const { type, id } = waypoint;
+  const { type, id = 1 } = waypoint;
   const { name: namePoint } = destination;
+  const cities = destinationAll.map((element) => element.name);
+  const pattern = cities.join('|');
+
   return (`
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-${id}">
@@ -30,7 +33,7 @@ function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
       <label class="event__label  event__type-output" for="event-destination-${id}">
         ${type}
       </label>
-      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${namePoint}" list="destination-list-${id}" placeholder=" Where will you go?" required ${isDisabled ? 'disabled' : ''}>
+      <input class="event__input  event__input--destination" id="event-destination-${id}" type="text" name="event-destination" value="${namePoint}" list="destination-list-${id}" placeholder=" Where will you go?" ${isDisabled ? 'disabled' : ''} pattern="${pattern}" title="Choose from the suggested ones" required>
       <datalist id="destination-list-${id}">
       ${destinationAll.map(({ name: nameDestination }) => `<option value="${nameDestination}"></option>`).join('')}
       </datalist>
@@ -39,13 +42,14 @@ function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
 
 function createDateTemplate(waypoint, isDisabled) {
   const { dateFrom, dateTo, id } = waypoint;
+
   return (`
     <div class="event__field-group  event__field-group--time">
       <label class="visually-hidden" for="event-start-time-${id}">From</label>
-      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, DateFormat.YEAR)}" required ${isDisabled ? 'disabled' : ''}>
+      <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${humanizeDueDate(dateFrom, DateFormat.YEAR)}" ${isDisabled ? 'disabled' : ''} required>
       &mdash;
       <label class="visually-hidden" for="event-end-time-${id}">To</label>
-      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, DateFormat.YEAR)}" required ${isDisabled ? 'disabled' : ''}>
+      <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${humanizeDueDate(dateTo, DateFormat.YEAR)}" ${isDisabled ? 'disabled' : ''} required>
     </div>`);
 }
 
@@ -66,12 +70,12 @@ function createSaveButton(isDisabled, isSaving) {
 }
 
 function createResetButton(isEditMode, isDisabled, isDeleting) {
-  return (`<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isEditMode ? `${isDeleting ? 'Deleting...' : 'Delete'}` : 'Cansel'}</button>`);
+  return (`<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isEditMode ? `${isDeleting ? 'Deleting...' : 'Delete'}` : 'Cancel'}</button>`);
 }
 
-function createRollupButton(isDisabled) {
+function createRollupButton() {
   return (`
-    <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
+    <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
     `);
@@ -79,6 +83,7 @@ function createRollupButton(isDisabled) {
 
 function createOffersTemplate(offers, offersType, isDisabled) {
   const idPoints = offers.map((item) => item.id);
+
   if (offersType.offers.length !== 0) {
     return (`
       <section class="event__section  event__section--offers">
@@ -87,8 +92,8 @@ function createOffersTemplate(offers, offersType, isDisabled) {
         <div class="event__available-offers">
         ${offersType.offers.map(({ title: titleOffersType, id: idOfferType, price }) => `
         <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${CLASS_NAME[titleOffersType]}-${idOfferType}" type="checkbox" name="event-offer-${CLASS_NAME[titleOffersType]}" ${idPoints.includes(idOfferType) ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
-          <label class="event__offer-label" for="event-offer-${CLASS_NAME[titleOffersType]}-${idOfferType}">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${titleOffersType.split(' ').at(-1)}-${idOfferType}" type="checkbox" name="event-offer-${titleOffersType.split(' ').at(-1)}" ${idPoints.includes(idOfferType) ? 'checked' : ''} ${isDisabled ? 'disabled' : ''}>
+          <label class="event__offer-label" for="event-offer-${titleOffersType.split(' ').at(-1)}-${idOfferType}">
             <span class="event__offer-title">${titleOffersType}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${price}</span>
@@ -130,8 +135,8 @@ function createDestinationTemplate(destination) {
     </section>`);
 }
 
-function createFormEditTemplate(state, offers, destinationAll, isEditMode) {
-  const { waypoint, offersType, destination, isDisabled, isSaving, isDeleting } = state;
+function createFormEditTemplate(state, destinationAll, isEditMode) {
+  const { waypoint, offersType, destination, isDisabled, isSaving, isDeleting, offers } = state;
   return (`
   <li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -141,7 +146,7 @@ function createFormEditTemplate(state, offers, destinationAll, isEditMode) {
         ${createPriceTemplate(waypoint, isDisabled)}
         ${createSaveButton(isDisabled, isSaving)}
         ${createResetButton(isEditMode, isDisabled, isDeleting)}
-        ${createRollupButton(isDisabled)}
+        ${createRollupButton()}
       </header>
       <section class="event__details">
         ${createOffersTemplate(offers, offersType, isDisabled)}
@@ -152,7 +157,6 @@ function createFormEditTemplate(state, offers, destinationAll, isEditMode) {
 }
 
 export default class FormEdit extends AbstractStatefulView {
-  #offers;
   #destinationAll;
   #offersAll;
   #handleFormSubmit;
@@ -163,8 +167,7 @@ export default class FormEdit extends AbstractStatefulView {
 
   constructor({ waypoint, offers, destination, offersType, destinationAll, offersAll, onFormSubmit, onDeleteClick, isEditMode }) {
     super();
-    this._setState(FormEdit.addsValuesPointToState(waypoint, offersType, destination));
-    this.#offers = offers;
+    this._setState(FormEdit.addsValuesPointToState(waypoint, offersType, destination, offers));
     this.#destinationAll = destinationAll;
     this.#offersAll = offersAll;
     this.#handleFormSubmit = onFormSubmit;
@@ -175,7 +178,7 @@ export default class FormEdit extends AbstractStatefulView {
   }
 
   get template() {
-    return createFormEditTemplate(this._state, this.#offers, this.#destinationAll, this.#isEditMode);
+    return createFormEditTemplate(this._state, this.#destinationAll, this.#isEditMode, this.#offersAll);
   }
 
   removeElement() {
@@ -191,16 +194,16 @@ export default class FormEdit extends AbstractStatefulView {
     }
   }
 
-  reset(waypoint, offersType, destination) {
+  reset(waypoint, offersType, destination, offers) {
     this.updateElement(
-      FormEdit.addsValuesPointToState(waypoint, offersType, destination),
+      FormEdit.addsValuesPointToState(waypoint, offersType, destination, offers)
     );
   }
 
   _restoreHandlers() {
     this.element.querySelector('.event--edit')?.addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#exitsWithoutSaving);
-    this.element.querySelector('.event__save-btn').addEventListener('click', this.#formSubmitHandler);
+    this.element.querySelector('.event__save-btn').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeToggleHandler);
     this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationToggleHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#waypointDeleteClickHandler);
@@ -213,17 +216,16 @@ export default class FormEdit extends AbstractStatefulView {
 
   #exitsWithoutSaving = (evt) => {
     evt.preventDefault();
-    if (evt.isTrusted) {
-      document.dispatchEvent(new KeyboardEvent('keydown', {
-        key: 'Escape',
-      }));
-    }
+    document.dispatchEvent(new KeyboardEvent('keydown', {
+      key: 'Escape',
+    }));
   };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    const { destination, basePrice, dateFrom, dateTo } = this._state.waypoint;
-    if (destination && basePrice && dateFrom && dateTo && basePrice < 100000) {
+    const { dateFrom, dateTo } = this._state.waypoint;
+
+    if (dateFrom && dateTo) {
       this.#handleFormSubmit(FormEdit.retrievesValuesStateToPoint(this._state.waypoint));
     }
   };
@@ -233,8 +235,10 @@ export default class FormEdit extends AbstractStatefulView {
       waypoint: {
         ...this._state.waypoint,
         type: evt.target.value,
+        offersId: [],
       },
       offersType: this.#offersAll.find((offer) => offer.type === evt.target.value),
+      offers: [],
     });
   };
 
@@ -246,8 +250,10 @@ export default class FormEdit extends AbstractStatefulView {
     const newOffers = new Set(this._state.waypoint.offersId);
 
     if (isChecked) {
+      evt.target.setAttribute('checked', '');
       newOffers.add(offerId);
     } else {
+      evt.target.removeAttribute('checked');
       newOffers.delete(offerId);
     }
 
@@ -255,36 +261,30 @@ export default class FormEdit extends AbstractStatefulView {
       waypoint: {
         ...this._state.waypoint,
         offersId: Array.from(newOffers),
-      }
+      },
+      offers: this._state.offersType.offers.filter((item) => Array.from(newOffers).find((id) => item.id === id)),
     });
   };
 
   #destinationToggleHandler = (evt) => {
-    const name = evt.target.value;
-    const destinationNames = [];
-    this.#destinationAll.forEach((element) => {
-      destinationNames.push(element.name);
-    });
-
-    if (!destinationNames.includes(name)) {
-      evt.target.value = '';
-      return '';
+    if (evt.target.value === '') {
+      return;
     }
-    if (name) {
-      this.updateElement({
-        destination: this.#destinationAll.find((item) => item.name === name),
-      });
+
+    const selectedDestination = this.#destinationAll.find((destination) => destination.name === evt.target.value);
+    if (selectedDestination) {
       this.updateElement({
         waypoint: {
           ...this._state.waypoint,
-          destination: this._state.destination.id,
+          destination: selectedDestination.id,
         },
+        destination: selectedDestination,
       });
     }
   };
 
   #basePriceToggleHandler = (evt) => {
-    this.updateElement({
+    this._setState({
       waypoint: {
         ...this._state.waypoint,
         basePrice: evt.target.value,
@@ -316,7 +316,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.#datepickerStart = flatpickr(
       this.element.querySelector('[name="event-start-time"]'),
       {
-        dateFormat: 'd/m/y h:i',
+        dateFormat: 'd/m/y H:i',
         enableTime: true,
         'time_24hr': true,
         defaultDate: this._state.waypoint.dateFrom,
@@ -329,7 +329,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.#datepickerStart = flatpickr(
       this.element.querySelector('[name="event-end-time"]'),
       {
-        dateFormat: 'd/m/y h:i',
+        dateFormat: 'd/m/y H:i',
         enableTime: true,
         'time_24hr': true,
         defaultDate: this._state.waypoint.dateTo,
@@ -341,10 +341,11 @@ export default class FormEdit extends AbstractStatefulView {
 
   #waypointDeleteClickHandler = (evt) => {
     evt.preventDefault();
+    evt.target.setAttribute('disabled', true);
     this.#handleDeleteClick(FormEdit.retrievesValuesStateToPoint(this._state.waypoint));
   };
 
-  static addsValuesPointToState(waypoint, offersType, destination) {
+  static addsValuesPointToState(waypoint, offersType, destination, offers) {
     return {
       waypoint: {
         ...waypoint,
@@ -354,6 +355,7 @@ export default class FormEdit extends AbstractStatefulView {
       },
       offersType: { ...offersType },
       destination: { ...destination },
+      offers: [...offers],
     };
   }
 

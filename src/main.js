@@ -6,40 +6,41 @@ import FilterModel from './model/filter-model.js';
 import ButtonNewEvent from './view/button-new-event.js';
 import WaypointsApiService from './waypoints-api-service.js';
 import { render, RenderPosition } from './framework/render.js';
+import { handleButtonDisabled } from './utils/utilities.js';
 
 const AUTHORIZATION = 'Basic random8string';
-const END_POINT = 'https://22.objects.pages.academy/big-trip';
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
 
 const siteFiltersElement = document.querySelector('.trip-main__trip-controls');
 const siteMainElement = document.querySelector('.trip-events');
-const waypointModel = new WaypointModel({
-  waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
-});
-const offersModel = new OffersModel({
-  waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
-});
-const destinationModel = new DestinationModel({
-  waypointsApiService: new WaypointsApiService(END_POINT, AUTHORIZATION)
-});
+const waypointsApiService = new WaypointsApiService(END_POINT, AUTHORIZATION);
+
+const waypointModel = new WaypointModel({ waypointsApiService: waypointsApiService });
+const offersModel = new OffersModel({ waypointsApiService: waypointsApiService });
+const destinationModel = new DestinationModel({ waypointsApiService: waypointsApiService });
 const filterModel = new FilterModel();
-
-const presenter = new TripPresenter({ headerContainer: siteFiltersElement, mainContainer: siteMainElement, waypointModel, offersModel, destinationModel, filterModel, onNewEventDestroy: handleNewEventFormClose });
-
 const newEventButtonComponent = new ButtonNewEvent({
   onClick: handleNewEventButtonClick
 });
 
+const presenter = new TripPresenter({ headerContainer: siteFiltersElement, mainContainer: siteMainElement, waypointModel, offersModel, destinationModel, filterModel, newEventButtonComponent, onNewEventDestroy: handleNewEventFormClose });
+
 function handleNewEventFormClose() {
-  newEventButtonComponent.element.disabled = false;
+  presenter.getPageUpdate({ isOpen: false });
+  handleButtonDisabled(false, newEventButtonComponent);
 }
 
 function handleNewEventButtonClick() {
   presenter.createNewWaypoint();
-  newEventButtonComponent.element.disabled = true;
+  presenter.getPageUpdate();
+  handleButtonDisabled(true, newEventButtonComponent);
 }
 
-destinationModel.init().then(() => offersModel.init()).then(() => waypointModel.init()).finally(() => {
-  render(newEventButtonComponent, siteFiltersElement, RenderPosition.AFTEREND);
-});
+Promise.all([destinationModel.init(), offersModel.init()])
+  .then(() => waypointModel.init())
+  .then(handleButtonDisabled(false, newEventButtonComponent))
+  .finally(() => {
+    render(newEventButtonComponent, siteFiltersElement, RenderPosition.AFTEREND);
+  });
 
 presenter.init();
