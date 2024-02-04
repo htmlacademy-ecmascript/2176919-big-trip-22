@@ -34,9 +34,7 @@ export default class TripInfoPresenter {
     const destinations = points.map((item) => this.#destinationModel.getDestinationsById(item.destination));
     const destinationNames = [];
     destinations.map((item) => {
-      if (!destinationNames.includes(item.name)) {
-        destinationNames.push(item.name);
-      }
+      destinationNames.push(item.name);
     });
     return destinationNames;
   }

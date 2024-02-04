@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeDueDate, formatNames } from '../utils/utilities.js';
+import { humanizeDueDate, formatNames } from '../utils/common.js';
 
 function createTripInfoTemplate(dateFrom, dateTo, destinationNames, totalCost) {
   return (

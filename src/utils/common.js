@@ -17,7 +17,14 @@ const getDuration = (start, end) => {
     hours++;
     minutes = 0;
   }
-  return `${days.toString().padStart(2, '0')}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
+  if (days) {
+    return `${days.toString().padStart(2, '0')}D ${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
+  }
+  if (hours) {
+    return `${hours.toString().padStart(2, '0')}H ${minutes.toString().padStart(2, '0')}M`;
+  } else {
+    return `${minutes.toString().padStart(2, '0')}M`;
+  }
 };
 
 function checksTravelIsSame(point) {

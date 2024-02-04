@@ -6,7 +6,7 @@ import FilterModel from './model/filter-model.js';
 import ButtonNewEvent from './view/button-new-event.js';
 import WaypointsApiService from './waypoints-api-service.js';
 import { render, RenderPosition } from './framework/render.js';
-import { handleButtonDisabled } from './utils/utilities.js';
+import { handleButtonDisabled } from './utils/common.js';
 
 const AUTHORIZATION = 'Basic random8string';
 const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
