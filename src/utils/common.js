@@ -2,10 +2,11 @@ import dayjs from 'dayjs';
 import durationPlugin from 'dayjs/plugin/duration.js';
 dayjs.extend(durationPlugin);
 import { FilterType } from './constants.js';
-const humanizeDueDate = (dueDate, format) => dueDate ? dayjs(dueDate).format(format) : '';
 
 const HOURS_COUNT = 24;
 const MINUTES_COUNT = 60;
+
+const humanizeDueDate = (dueDate, format) => dueDate ? dayjs(dueDate).format(format) : '';
 
 const getDuration = (start, end) => {
   const duration = dayjs.duration(dayjs(end).diff(dayjs(start)));
@@ -31,13 +32,7 @@ function checksTravelIsSame(point) {
   const { dateFrom, dateTo } = point;
   const currentDate = dayjs();
 
-  for (let date = dayjs(dateFrom); date <= dayjs(dateTo); date = date.add(1, 'day')) {
-    if (date.isSame(currentDate, 'day')) {
-      return true;
-    }
-  }
-
-  return false;
+  return currentDate.isSame(dateFrom, 'day') || currentDate.isSame(dateTo, 'day');
 }
 
 function checksTravelIsBefore(dueDate) {
@@ -50,9 +45,9 @@ function checksTravelIsAfter(dueDate) {
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points,
-  [FilterType.PAST]: (points) => points.filter((point) => checksTravelIsBefore(point.dateTo)),
+  [FilterType.PAST]: (points) => points.filter((point) => checksTravelIsAfter(point.dateTo)),
   [FilterType.PRESENT]: (points) => points.filter((point) => checksTravelIsSame(point)),
-  [FilterType.FUTURE]: (points) => points.filter((point) => checksTravelIsAfter(point.dateFrom)),
+  [FilterType.FUTURE]: (points) => points.filter((point) => checksTravelIsBefore(point.dateFrom)),
 };
 
 function sortWaypointByDate(waypointA, waypointB) {

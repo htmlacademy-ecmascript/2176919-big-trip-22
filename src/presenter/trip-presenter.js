@@ -81,6 +81,19 @@ export default class TripPresenter {
     return filteredWaypoints.sort(sortWaypointByDate);
   }
 
+  getPageUpdate(isOpen) {
+    if (this.#noEventComponent) {
+      remove(this.#noEventComponent);
+    }
+    if (!this.#isError && isOpen) {
+      const waypointCount = this.waypoints.length;
+      if (waypointCount === 0) {
+        this.#renderNoEvent();
+        this.#tripInfoPresenter.destroy();
+      }
+    }
+  }
+
   init() {
     this.#renderApp();
     render(this.#waypointListComponent, this.#mainContainer);
@@ -145,19 +158,6 @@ export default class TripPresenter {
       this.#renderSort();
       for (let i = 0; i < waypointCount; i++) {
         this.#renderWaypoint(waypoints[i]);
-      }
-    }
-  }
-
-  getPageUpdate(isOpen) {
-    if (this.#noEventComponent) {
-      remove(this.#noEventComponent);
-    }
-    if (!this.#isError && isOpen) {
-      const waypointCount = this.waypoints.length;
-      if (waypointCount === 0) {
-        this.#renderNoEvent();
-        this.#tripInfoPresenter.destroy();
       }
     }
   }
