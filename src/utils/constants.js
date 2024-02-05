@@ -40,10 +40,10 @@ const UpdateType = {
   ERROR: 'Error',
 };
 const DEFAULT_TYPE = 'flight';
-const TYPE = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
+const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const LoadingMessage = {
   READY: 'Loading...',
   ERROR: 'Failed to load latest route information',
 };
 
-export { DateFormat, TextNoEvent, FilterType, Mode, SORTING, SortType, UserAction, UpdateType, DEFAULT_TYPE, TYPE, LoadingMessage };
+export { DateFormat, TextNoEvent, FilterType, Mode, SORTING, SortType, UserAction, UpdateType, DEFAULT_TYPE, TYPES, LoadingMessage };

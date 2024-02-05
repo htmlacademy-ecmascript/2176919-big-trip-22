@@ -2,7 +2,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeDueDate } from '../utils/common.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import { DateFormat, TYPE } from '../utils/constants.js';
+import { DateFormat, TYPES } from '../utils/constants.js';
 
 function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
   const { type, id = 1 } = waypoint;
@@ -21,7 +21,7 @@ function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
       <div class="event__type-list">
         <fieldset class="event__type-group" ${isDisabled ? 'disabled' : ''}>
           <legend class="visually-hidden">Event type</legend>
-          ${TYPE.map((item) => `<div class="event__type-item">
+          ${TYPES.map((item) => `<div class="event__type-item">
             <input id="event-type-${item}-${id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item}" ${item === type ? 'checked' : ''}>
             <label class="event__type-label  event__type-label--${item}" for="event-type-${item}-${id}">${item}</label>
           </div>`).join('')}
