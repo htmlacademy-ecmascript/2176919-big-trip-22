@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
 import durationPlugin from 'dayjs/plugin/duration.js';
 import isBetween from 'dayjs/plugin/isBetween.js';
-dayjs.extend(durationPlugin);
-dayjs.extend(isBetween);
 import { FilterType } from './constants.js';
 
 const HOURS_COUNT = 24;
 const MINUTES_COUNT = 60;
+
+dayjs.extend(durationPlugin);
+dayjs.extend(isBetween);
 
 const humanizeDueDate = (dueDate, format) => dueDate ? dayjs(dueDate).format(format) : '';
 
@@ -16,7 +17,7 @@ const getDuration = (start, end) => {
   const days = Math.floor(totalDays);
   let hours = Math.floor((totalDays - days) * HOURS_COUNT);
   let minutes = Math.floor(duration.asMinutes() - days * HOURS_COUNT * MINUTES_COUNT - hours * MINUTES_COUNT);
-  if (minutes === 60) {
+  if (minutes === MINUTES_COUNT) {
     hours++;
     minutes = 0;
   }
