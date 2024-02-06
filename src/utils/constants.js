@@ -1,3 +1,7 @@
+
+const AUTHORIZATION = 'Basic random8string';
+const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
+
 const DateFormat = {
   DAY: 'MMM D',
   HOURS_MINUTES: 'HH:mm',
@@ -46,4 +50,4 @@ const LoadingMessage = {
   ERROR: 'Failed to load latest route information',
 };
 
-export { DateFormat, TextNoEvent, FilterType, Mode, SORTING, SortType, UserAction, UpdateType, DEFAULT_TYPE, TYPES, LoadingMessage };
+export { AUTHORIZATION, END_POINT, DateFormat, TextNoEvent, FilterType, Mode, SORTING, SortType, UserAction, UpdateType, DEFAULT_TYPE, TYPES, LoadingMessage };

@@ -81,6 +81,11 @@ export default class TripPresenter {
     return filteredWaypoints.sort(sortWaypointByDate);
   }
 
+  init() {
+    this.#renderApp();
+    render(this.#waypointListComponent, this.#mainContainer);
+  }
+
   getPageUpdate(isOpen) {
     if (this.#noEventComponent) {
       remove(this.#noEventComponent);
@@ -94,9 +99,11 @@ export default class TripPresenter {
     }
   }
 
-  init() {
-    this.#renderApp();
-    render(this.#waypointListComponent, this.#mainContainer);
+  createNewWaypoint() {
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#clearWaypointList({ resetSortType: true });
+    this.#renderWaypointList();
+    this.#newEventPresenter.init();
   }
 
   #renderWaypoint(point) {
@@ -110,13 +117,6 @@ export default class TripPresenter {
     });
     waypointPresenter.init(point);
     this.#waypointPresenters.set(point.id, waypointPresenter);
-  }
-
-  createNewWaypoint() {
-    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#clearWaypointList({ resetSortType: true });
-    this.#renderWaypointList();
-    this.#newEventPresenter.init();
   }
 
   #clearWaypointList(resetSortType = false) {

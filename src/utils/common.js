@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import durationPlugin from 'dayjs/plugin/duration.js';
+import isBetween from 'dayjs/plugin/isBetween.js';
 dayjs.extend(durationPlugin);
+dayjs.extend(isBetween);
 import { FilterType } from './constants.js';
 
 const HOURS_COUNT = 24;
@@ -32,7 +34,7 @@ function checksTravelIsSame(point) {
   const { dateFrom, dateTo } = point;
   const currentDate = dayjs();
 
-  return currentDate.isSame(dateFrom, 's') || currentDate.isSame(dateTo, 's');
+  return currentDate.isBetween(dateFrom, dateTo, 'minute', '[]');
 }
 
 function checksTravelIsBefore(dueDate) {

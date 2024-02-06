@@ -1,6 +1,6 @@
-import { render, replace, remove } from '../framework/render.js';
 import Waypoint from '../view/waypoint.js';
 import FormEdit from '../view/form-edit.js';
+import { render, replace, remove } from '../framework/render.js';
 import { Mode, UserAction, UpdateType } from '../utils/constants.js';
 export default class WaypointPresenter {
   #waypointListComponent = null;
@@ -74,14 +74,6 @@ export default class WaypointPresenter {
     remove(this.#waypointEditComponent);
   }
 
-  #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      this.#waypointEditComponent.reset(this.#waypoint, this.#offersType, this.#destination, this.#offers);
-      this.#replaceFormToPoint();
-    }
-  };
-
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
       this.#waypointEditComponent.reset(this.#waypoint, this.#offersType, this.#destination, this.#offers);
@@ -124,16 +116,24 @@ export default class WaypointPresenter {
     this.#waypointEditComponent.shake(resetFormState);
   }
 
+  #handleEscapeKeyDown = (evt) => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      this.#waypointEditComponent.reset(this.#waypoint, this.#offersType, this.#destination, this.#offers);
+      this.#replaceFormToPoint();
+    }
+  };
+
   #replacePointToForm() {
     replace(this.#waypointEditComponent, this.#waypointComponent);
-    document.addEventListener('keydown', this.#escKeyDownHandler);
+    document.addEventListener('keydown', this.#handleEscapeKeyDown);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
   #replaceFormToPoint() {
     replace(this.#waypointComponent, this.#waypointEditComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    document.removeEventListener('keydown', this.#handleEscapeKeyDown);
     this.#mode = Mode.DEFAULT;
   }
 
