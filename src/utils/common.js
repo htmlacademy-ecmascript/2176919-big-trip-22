@@ -32,7 +32,7 @@ function checksTravelIsSame(point) {
   const { dateFrom, dateTo } = point;
   const currentDate = dayjs();
 
-  return currentDate.isSame(dateFrom, 'day') || currentDate.isSame(dateTo, 'day');
+  return currentDate.isSame(dateFrom, 's') || currentDate.isSame(dateTo, 's');
 }
 
 function checksTravelIsBefore(dueDate) {
@@ -45,9 +45,9 @@ function checksTravelIsAfter(dueDate) {
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points,
-  [FilterType.PAST]: (points) => points.filter((point) => checksTravelIsAfter(point.dateTo)),
+  [FilterType.PAST]: (points) => points.filter((point) => checksTravelIsBefore(point.dateTo)),
   [FilterType.PRESENT]: (points) => points.filter((point) => checksTravelIsSame(point)),
-  [FilterType.FUTURE]: (points) => points.filter((point) => checksTravelIsBefore(point.dateFrom)),
+  [FilterType.FUTURE]: (points) => points.filter((point) => checksTravelIsAfter(point.dateFrom)),
 };
 
 function sortWaypointByDate(waypointA, waypointB) {
