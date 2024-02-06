@@ -69,8 +69,8 @@ function createSaveButton(isDisabled, isSaving) {
   return (`<button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>`);
 }
 
-function createResetButton(isEditMode, isDisabled, isDeleting) {
-  return (`<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isEditMode ? `${isDeleting ? 'Deleting...' : 'Delete'}` : 'Cancel'}</button>`);
+function createResetButton(isEditMode, isDeleting) {
+  return (`<button class="event__reset-btn" type="reset">${isEditMode ? `${isDeleting ? 'Deleting...' : 'Delete'}` : 'Cancel'}</button>`);
 }
 
 function createRollupButton() {
@@ -145,7 +145,7 @@ function createFormEditTemplate(state, destinationAll, isEditMode) {
         ${createDateTemplate(waypoint, isDisabled)}
         ${createPriceTemplate(waypoint, isDisabled)}
         ${createSaveButton(isDisabled, isSaving)}
-        ${createResetButton(isEditMode, isDisabled, isDeleting)}
+        ${createResetButton(isEditMode, isDeleting)}
         ${createRollupButton()}
       </header>
       <section class="event__details">
