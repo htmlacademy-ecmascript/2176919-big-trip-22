@@ -1,8 +1,8 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { humanizeDueDate } from '../utils/common.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { DateFormat, TYPES } from '../utils/constants.js';
+import { humanizeDueDate } from '../utils/common.js';
 
 function createTypeTemplate(waypoint, destination, destinationAll, isDisabled) {
   const { type, id = 1 } = waypoint;
@@ -224,7 +224,6 @@ export default class FormEdit extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     const { dateFrom, dateTo } = this._state.waypoint;
-
     if (dateFrom && dateTo) {
       this.#handleFormSubmit(FormEdit.retrievesValuesStateToPoint(this._state.waypoint));
     }
@@ -302,8 +301,8 @@ export default class FormEdit extends AbstractStatefulView {
   };
 
   #dateToChangeHandler = ([userDate]) => {
-    if (userDate.toISOString() > this._state.waypoint.dateFrom) {
-      this.updateElement({
+    if (userDate.toISOString() >= this._state.waypoint.dateFrom) {
+      this._setState({
         waypoint: {
           ...this._state.waypoint,
           dateTo: userDate.toISOString(),

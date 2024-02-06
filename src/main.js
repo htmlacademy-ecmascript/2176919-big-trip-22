@@ -7,9 +7,7 @@ import ButtonNewEvent from './view/button-new-event.js';
 import WaypointsApiService from './waypoints-api-service.js';
 import { render, RenderPosition } from './framework/render.js';
 import { handleButtonDisabled } from './utils/common.js';
-
-const AUTHORIZATION = 'Basic random8string';
-const END_POINT = 'https://22.objects.htmlacademy.pro/big-trip';
+import { AUTHORIZATION, END_POINT } from './utils/constants.js';
 
 const siteFiltersElement = document.querySelector('.trip-main__trip-controls');
 const siteMainElement = document.querySelector('.trip-events');
