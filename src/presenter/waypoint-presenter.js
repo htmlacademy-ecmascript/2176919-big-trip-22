@@ -116,7 +116,7 @@ export default class WaypointPresenter {
     this.#waypointEditComponent.shake(resetFormState);
   }
 
-  #handleEscapeKeyDown = (evt) => {
+  #documentKeydownHandler = (evt) => {
     if (evt.key === 'Escape') {
       evt.preventDefault();
       this.#waypointEditComponent.reset(this.#waypoint, this.#offersType, this.#destination, this.#offers);
@@ -126,14 +126,14 @@ export default class WaypointPresenter {
 
   #replacePointToForm() {
     replace(this.#waypointEditComponent, this.#waypointComponent);
-    document.addEventListener('keydown', this.#handleEscapeKeyDown);
+    document.addEventListener('keydown', this.#documentKeydownHandler);
     this.#handleModeChange();
     this.#mode = Mode.EDITING;
   }
 
   #replaceFormToPoint() {
     replace(this.#waypointComponent, this.#waypointEditComponent);
-    document.removeEventListener('keydown', this.#handleEscapeKeyDown);
+    document.removeEventListener('keydown', this.#documentKeydownHandler);
     this.#mode = Mode.DEFAULT;
   }
 

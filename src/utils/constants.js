@@ -25,7 +25,7 @@ const Mode = {
   DEFAULT: 'Default',
   EDITING: 'Editing',
 };
-const SORTING = ['day', 'event', 'time', 'price', 'offers'];
+const SORTING_TYPES = ['day', 'event', 'time', 'price', 'offers'];
 const SortType = {
   DAY: 'day',
   TIME: 'time',
@@ -50,4 +50,4 @@ const LoadingMessage = {
   ERROR: 'Failed to load latest route information',
 };
 
-export { AUTHORIZATION, END_POINT, DateFormat, TextNoEvent, FilterType, Mode, SORTING, SortType, UserAction, UpdateType, DEFAULT_TYPE, TYPES, LoadingMessage };
+export { AUTHORIZATION, END_POINT, DateFormat, TextNoEvent, FilterType, Mode, SORTING_TYPES, SortType, UserAction, UpdateType, DEFAULT_TYPE, TYPES, LoadingMessage };

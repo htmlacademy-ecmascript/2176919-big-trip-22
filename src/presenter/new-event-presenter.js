@@ -39,7 +39,7 @@ export default class NewEventPresenter {
 
     render(this.#formComponent, this.#pointListContainer.element, RenderPosition.AFTERBEGIN);
 
-    document.addEventListener('keydown', this.#handleEscapeKeyDown);
+    document.addEventListener('keydown', this.#documentKeydownHandler);
   }
 
   destroy() {
@@ -52,7 +52,7 @@ export default class NewEventPresenter {
     remove(this.#formComponent);
     this.#formComponent = null;
 
-    document.removeEventListener('keydown', this.#handleEscapeKeyDown);
+    document.removeEventListener('keydown', this.#documentKeydownHandler);
   }
 
   setSaving() {
@@ -86,7 +86,7 @@ export default class NewEventPresenter {
     this.destroy();
   };
 
-  #handleEscapeKeyDown = (evt) => {
+  #documentKeydownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
       this.destroy();
