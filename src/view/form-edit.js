@@ -205,7 +205,7 @@ export default class FormEdit extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
     this.element.querySelector('.event__save-btn').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#eventTypeInputChangeHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('input', this.#destinationInputChangeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('input', this.#eventDestinationInputHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#waypointDeleteClickHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceInputChangeHandler);
     this.element.querySelector('.event__available-offers')?.addEventListener('change', this.#offersCheckboxChangeHandler);
@@ -265,7 +265,7 @@ export default class FormEdit extends AbstractStatefulView {
     });
   };
 
-  #destinationInputChangeHandler = (evt) => {
+  #eventDestinationInputHandler = (evt) => {
     if (evt.target.value === '') {
       return;
     }
